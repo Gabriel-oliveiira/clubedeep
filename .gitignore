@@ -1,0 +1,15 @@
+# dependencias e build
+node_modules/
+.next/
+out/
+
+# variaveis de ambiente - NUNCA versionar (chaves/segredos)
+.env
+.env.local
+.env.*.local
+.env.production
+
+# diversos
+npm-debug.log*
+.DS_Store
+*.log
