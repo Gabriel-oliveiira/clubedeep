@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { pontos, labelCategoria, dataBR } from '@/lib/format';
 import { linkWhatsapp, nomeLoja } from '@/lib/lojas';
+import { IcSearch } from '@/components/Icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,7 +118,12 @@ export default async function Clientes({ searchParams }) {
                     <td style={{ textAlign: 'right' }} className="num"><b>{pontos(c.pontos_validos)}</b></td>
                     <td style={{ textAlign: 'right' }} className={`num ${Number(c.expira_30d) > 0 ? 'neg' : 'muted'}`}>{pontos(c.expira_30d)}</td>
                     <td className="muted">{dataBR(c.dt_ultima_compra)}</td>
-                    <td><a className="btn-ghost" style={{ padding: '6px 12px', borderRadius: 8 }} href={`/clientes/${encodeURIComponent(c.cd_cliente)}`}>Ficha</a></td>
+                    <td>
+                      <a className="btn-ghost" style={{ padding: '7px 9px', borderRadius: 8, display: 'inline-flex' }}
+                         href={`/clientes/${encodeURIComponent(c.cd_cliente)}`} title="Ver ficha do cliente" aria-label="Ver ficha do cliente">
+                        <IcSearch style={{ width: 15, height: 15 }} />
+                      </a>
+                    </td>
                   </tr>
                 );
               })}
