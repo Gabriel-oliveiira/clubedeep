@@ -53,7 +53,7 @@ export function BarrasMensais({ meses }) {
     <>
       <div className="bars">
         {meses.map((m, i) => (
-          <div className="bar-col" key={i} title={`${m.mes}: +${pontos(m.ganhos)} / -${pontos(m.abatidos)}`}>
+          <div className="bar-col" key={i} title={`${NOMES[m.mes.slice(5)] || m.mes}/${m.mes.slice(0, 4)} — Ganhos: ${pontos(m.ganhos)} · Devolucoes: ${pontos(m.abatidos)}`}>
             <div className="bar-duo">
               <div className="bar ganho" style={{ height: `${(m.ganhos / max) * 100}%` }} />
               <div className="bar abatido" style={{ height: `${(m.abatidos / max) * 100}%` }} />
