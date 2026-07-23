@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { pontos, labelCategoria, dataBR } from '@/lib/format';
-import { linkWhatsapp } from '@/lib/lojas';
+import { linkWhatsapp, nomeLoja } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,7 +93,10 @@ export default async function Clientes({ searchParams }) {
                 const wa = linkWhatsapp(c.telefone);
                 return (
                   <tr key={c.cd_cliente}>
-                    <td className="muted" style={{ whiteSpace: 'nowrap' }}>{c.loja_ultima || '-'}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                      {c.loja_ultima || <span className="muted">-</span>}
+                      <span className="sub">cad: {nomeLoja(c.empresa)}</span>
+                    </td>
                     <td>
                       {c.nome} {c.em_carencia && <span className="chip carencia">carencia</span>}
                       <span className="sub">#{c.cd_cliente}</span>

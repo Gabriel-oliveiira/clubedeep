@@ -1,7 +1,8 @@
 import { brl, pontos, dataBR, labelCategoria, labelEvento } from '@/lib/format';
+import { nomeLoja } from '@/lib/lojas';
 import { IcStar, IcClock, IcTrend, IcAlert } from '@/components/Icons';
 
-export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria = [], aexp, voltar, loja = false }) {
+export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria = [], aexp, lojaUltima, voltar, loja = false }) {
   const cat = saldo?.categoria_efetiva || 'sem_categoria';
   const catReal = saldo?.categoria || 'sem_categoria';
   return (
@@ -54,6 +55,8 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
             <div><small className="muted">Telefone</small><div className="num">{cliente.telefone || '-'}</div></div>
             <div><small className="muted">E-mail</small><div>{cliente.email || '-'}</div></div>
             <div><small className="muted">Ultima compra</small><div>{dataBR(cliente.dt_ultima_compra)}</div></div>
+            <div><small className="muted">Loja da ultima compra (clube)</small><div>{lojaUltima || '-'}</div></div>
+            <div><small className="muted">Loja de cadastro</small><div>{nomeLoja(cliente.empresa)}</div></div>
           </div>
         </div>
       )}
