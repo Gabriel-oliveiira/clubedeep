@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
+export const dynamic = 'force-dynamic';
+
 // Todas as operacoes exigem papel admin
 async function exigeAdmin() {
   const a = await getAcesso();

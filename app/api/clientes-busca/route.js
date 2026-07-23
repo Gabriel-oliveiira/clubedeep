@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
+export const dynamic = 'force-dynamic';
+
 // Busca de clientes para o seletor de loja (so admin)
 export async function GET(request) {
   const a = await getAcesso();
