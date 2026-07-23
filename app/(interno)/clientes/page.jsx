@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { pontos, labelCategoria, dataBR } from '@/lib/format';
-import { nomeLoja, linkWhatsapp } from '@/lib/lojas';
+import { linkWhatsapp } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +29,7 @@ const IcoWhats = () => (
 export default async function Clientes({ searchParams }) {
   const q = (searchParams?.q || '').trim();
   const cat = searchParams?.cat || '';
+  const mov = searchParams?.mov || '';
   const ordem = ORDENS[searchParams?.ordem] ? searchParams.ordem : 'saldo';
   const page = Math.max(1, parseInt(searchParams?.page || '1', 10) || 1);
   const from = (page - 1) * PAGE_SIZE;
@@ -41,6 +42,7 @@ export default async function Clientes({ searchParams }) {
     query = query.or(`nome.ilike.%${termo}%,cpf_cnpj.ilike.%${termo}%,cd_cliente.ilike.%${termo}%`);
   }
   if (cat) query = query.eq('categoria', cat);
+  if (mov === '1') query = query.not('loja_ultima', 'is', null);
   query = query.order(o.col, { ascending: o.asc, nullsFirst: false }).range(from, to);
 
   const { data: rows, count } = await query;
@@ -63,6 +65,10 @@ export default async function Clientes({ searchParams }) {
             <select name="cat" defaultValue={cat} style={{ flex: 1, minWidth: 150 }}>
               <option value="">Todas categorias</option>
               {CATS.map(c => <option key={c} value={c}>{labelCategoria(c)}</option>)}
+            </select>
+            <select name="mov" defaultValue={mov} style={{ flex: 1, minWidth: 170 }}>
+              <option value="">Todos os clientes</option>
+              <option value="1">Com movimento no clube</option>
             </select>
             <select name="ordem" defaultValue={ordem} style={{ flex: 1, minWidth: 150 }}>
               {Object.entries(ORDENS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
@@ -87,7 +93,7 @@ export default async function Clientes({ searchParams }) {
                 const wa = linkWhatsapp(c.telefone);
                 return (
                   <tr key={c.cd_cliente}>
-                    <td className="muted" style={{ whiteSpace: 'nowrap' }}>{c.loja_ultima || nomeLoja(c.empresa)}</td>
+                    <td className="muted" style={{ whiteSpace: 'nowrap' }}>{c.loja_ultima || '-'}</td>
                     <td>
                       {c.nome} {c.em_carencia && <span className="chip carencia">carencia</span>}
                       <span className="sub">#{c.cd_cliente}</span>
