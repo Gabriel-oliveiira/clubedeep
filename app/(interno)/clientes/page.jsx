@@ -87,7 +87,7 @@ export default async function Clientes({ searchParams }) {
                 const wa = linkWhatsapp(c.telefone);
                 return (
                   <tr key={c.cd_cliente}>
-                    <td className="muted" style={{ whiteSpace: 'nowrap' }}>{nomeLoja(c.empresa)}</td>
+                    <td className="muted" style={{ whiteSpace: 'nowrap' }}>{c.loja_ultima || nomeLoja(c.empresa)}</td>
                     <td>
                       {c.nome} {c.em_carencia && <span className="chip carencia">carencia</span>}
                       <span className="sub">#{c.cd_cliente}</span>
