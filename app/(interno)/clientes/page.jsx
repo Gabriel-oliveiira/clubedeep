@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { pontos, labelCategoria, dataBR } from '@/lib/format';
+import { pontos, labelCategoria, labelTipoCliente, dataBR } from '@/lib/format';
 import { linkWhatsapp, nomeLoja } from '@/lib/lojas';
 import { IcSearch } from '@/components/Icons';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 50;
 const CATS = ['platina', 'ouro', 'prata', 'bronze', 'sem_categoria'];
+const TIPOS = ['REVENDEDOR', 'LOJISTA', 'REPRESENTANTE'];
 const ORDENS = {
   saldo: { col: 'pontos_validos', asc: false, label: 'Maior saldo' },
   expira: { col: 'expira_30d', asc: false, label: 'A expirar (30d)' },
@@ -30,6 +31,7 @@ const IcoWhats = () => (
 export default async function Clientes({ searchParams }) {
   const q = (searchParams?.q || '').trim();
   const cat = searchParams?.cat || '';
+  const tipo = searchParams?.tipo || '';
   const mov = searchParams?.mov || '';
   const lj = searchParams?.lj || '';
   const ordem = ORDENS[searchParams?.ordem] ? searchParams.ordem : 'saldo';
@@ -44,6 +46,7 @@ export default async function Clientes({ searchParams }) {
     query = query.or(`nome.ilike.%${termo}%,cpf_cnpj.ilike.%${termo}%,cd_cliente.ilike.%${termo}%`);
   }
   if (cat) query = query.eq('categoria', cat);
+  if (tipo) query = query.eq('cat_cliente', tipo);
   if (mov === '1') query = query.not('loja_ultima', 'is', null);
   if (lj) query = query.eq('loja_ultima', lj);
   query = query.order(o.col, { ascending: o.asc, nullsFirst: false }).range(from, to);
@@ -60,7 +63,7 @@ export default async function Clientes({ searchParams }) {
       <div className="page-head">
         <div>
           <h1>Clientes</h1>
-          <div className="sub">{pontos(total)} cliente(s) {cat ? `· ${labelCategoria(cat)}` : ''}{q ? ` · busca: "${q}"` : ''}</div>
+          <div className="sub">{pontos(total)} cliente(s) {cat ? `· ${labelCategoria(cat)}` : ''}{tipo ? ` · ${labelTipoCliente(tipo)}` : ''}{q ? ` · busca: "${q}"` : ''}</div>
         </div>
       </div>
 
@@ -69,8 +72,12 @@ export default async function Clientes({ searchParams }) {
           <div className="toolbar">
             <input name="q" defaultValue={q} placeholder="Nome, CPF/CNPJ ou codigo" style={{ flex: 2, minWidth: 220 }} />
             <select name="cat" defaultValue={cat} style={{ flex: 1, minWidth: 150 }}>
-              <option value="">Todas categorias</option>
+              <option value="">Todos os niveis</option>
               {CATS.map(c => <option key={c} value={c}>{labelCategoria(c)}</option>)}
+            </select>
+            <select name="tipo" defaultValue={tipo} style={{ flex: 1, minWidth: 150 }}>
+              <option value="">Todas as categorias</option>
+              {TIPOS.map(t => <option key={t} value={t}>{labelTipoCliente(t)}</option>)}
             </select>
             <select name="lj" defaultValue={lj} style={{ flex: 1, minWidth: 170 }}>
               <option value="">Todas as lojas</option>
@@ -93,8 +100,8 @@ export default async function Clientes({ searchParams }) {
           <table>
             <thead>
               <tr>
-                <th>Loja</th><th>Cliente</th><th>WhatsApp</th><th>E-mail</th>
-                <th>Categoria</th><th style={{ textAlign: 'right' }}>Saldo</th>
+                <th>Loja</th><th>Cliente</th><th>Categoria</th><th>WhatsApp</th><th>E-mail</th>
+                <th>Nivel</th><th style={{ textAlign: 'right' }}>Saldo</th>
                 <th style={{ textAlign: 'right' }}>Expira 30d</th><th>Ultima compra</th><th></th>
               </tr>
             </thead>
@@ -111,6 +118,7 @@ export default async function Clientes({ searchParams }) {
                       {c.nome} {c.em_carencia && <span className="chip carencia">carencia</span>}
                       <span className="sub">#{c.cd_cliente}</span>
                     </td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{labelTipoCliente(c.cat_cliente)}</td>
                     <td style={{ textAlign: 'center' }}>
                       {wa ? (
                         <a href={wa} target="_blank" rel="noopener noreferrer"
@@ -136,15 +144,15 @@ export default async function Clientes({ searchParams }) {
                   </tr>
                 );
               })}
-              {(!rows || rows.length === 0) && <tr><td colSpan={9}><div className="empty">Nenhum cliente encontrado.</div></td></tr>}
+              {(!rows || rows.length === 0) && <tr><td colSpan={10}><div className="empty">Nenhum cliente encontrado.</div></td></tr>}
             </tbody>
           </table>
         </div>
         <div className="pager">
           <span>Pagina {page} de {totalPages}</span>
           <div className="btns">
-            {page > 1 && <a href={`/clientes${qs({ q, cat, ordem, page: String(page - 1) })}`}>&larr; Anterior</a>}
-            {page < totalPages && <a href={`/clientes${qs({ q, cat, ordem, page: String(page + 1) })}`}>Proxima &rarr;</a>}
+            {page > 1 && <a href={`/clientes${qs({ q, cat, tipo, lj, mov, ordem, page: String(page - 1) })}`}>&larr; Anterior</a>}
+            {page < totalPages && <a href={`/clientes${qs({ q, cat, tipo, lj, mov, ordem, page: String(page + 1) })}`}>Proxima &rarr;</a>}
           </div>
         </div>
       </div>

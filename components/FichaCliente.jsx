@@ -1,4 +1,4 @@
-import { brl, pontos, dataBR, labelCategoria, labelEvento } from '@/lib/format';
+import { brl, pontos, dataBR, labelCategoria, labelEvento, labelOrigem, labelTipoCliente } from '@/lib/format';
 import { nomeLoja } from '@/lib/lojas';
 import { IcStar, IcClock, IcTrend, IcAlert } from '@/components/Icons';
 
@@ -33,7 +33,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
         </div>
         <div className="card kpi-card">
           <div className="kpi-top"><div className="kpi-ico"><IcTrend /></div></div>
-          <div><div className="kpi-val" style={{ fontSize: 19 }}>{dataBR(saldo?.categoria_desde)}</div><div className="kpi-lbl">Nesta categoria desde</div></div>
+          <div><div className="kpi-val" style={{ fontSize: 19 }}>{dataBR(saldo?.categoria_desde)}</div><div className="kpi-lbl">Neste nivel desde</div></div>
         </div>
         <div className="card kpi-card gold">
           <div className="kpi-top"><div className="kpi-ico"><IcClock /></div></div>
@@ -50,7 +50,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
           <h2>Dados do cliente</h2>
           <div className="grid cols-3">
             <div><small className="muted">CPF/CNPJ</small><div className="num">{cliente.cpf_cnpj || '-'}</div></div>
-            <div><small className="muted">Classificacao (TOTVS)</small><div>{cliente.cat_cliente || '-'}</div></div>
+            <div><small className="muted">Categoria</small><div>{labelTipoCliente(cliente.cat_cliente)}</div></div>
             <div><small className="muted">Cidade/UF</small><div>{[cliente.cidade, cliente.uf].filter(Boolean).join(' / ') || '-'}</div></div>
             <div><small className="muted">Telefone</small><div className="num">{cliente.telefone || '-'}</div></div>
             <div><small className="muted">E-mail</small><div>{cliente.email || '-'}</div></div>
@@ -69,7 +69,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
             <tbody>
               {extrato.map((m, i) => (
                 <tr key={i}>
-                  <td style={{ textTransform: 'capitalize' }}>{String(m.origem || '').replace('_', ' ')}</td>
+                  <td>{labelOrigem(m.origem)}</td>
                   <td className="muted">{m.descricao}</td>
                   <td className="num">{dataBR(m.dt_ponto)}</td>
                   <td className="num">{dataBR(m.dt_expira)}</td>
@@ -85,7 +85,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
 
       {!loja && (
         <div className="card flush">
-          <div className="card-pad"><h2 style={{ margin: 0 }}>Trajetoria de categoria</h2></div>
+          <div className="card-pad"><h2 style={{ margin: 0 }}>Trajetoria de nivel</h2></div>
           <table>
             <thead><tr><th>Quando</th><th>Evento</th><th>De</th><th>Para</th><th style={{ textAlign: 'right' }}>Pontos</th></tr></thead>
             <tbody>

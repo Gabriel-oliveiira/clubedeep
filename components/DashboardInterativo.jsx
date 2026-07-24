@@ -45,7 +45,7 @@ export default function DashboardInterativo() {
     <>
       {/* barra de filtros ativos */}
       <div className="filter-bar">
-        {cat && <span className="fchip">Categoria: {labelCategoria(cat)} <button className="x" onClick={() => setCat(null)}>&times;</button></span>}
+        {cat && <span className="fchip">Nivel: {labelCategoria(cat)} <button className="x" onClick={() => setCat(null)}>&times;</button></span>}
         {loja && <span className="fchip">Loja: {loja} <button className="x" onClick={() => setLoja(null)}>&times;</button></span>}
         {mes && <span className="fchip">Mes: {mesLabel(mes)} <button className="x" onClick={() => setMes(null)}>&times;</button></span>}
         {temFiltro && <button className="limpar" onClick={() => { setCat(null); setLoja(null); setMes(null); }}>Limpar filtros</button>}
@@ -106,7 +106,7 @@ export default function DashboardInterativo() {
 
           {/* donut categorias */}
           <div className="card">
-            <h2>Clientes por categoria</h2>
+            <h2>Clientes por nivel</h2>
             {donut.length === 0 ? <div className="empty">Sem dados no filtro atual.</div> : (
               <DonutInterativo dados={donut} sel={cat} onSel={c => setCat(cat === c ? null : c)} />
             )}
