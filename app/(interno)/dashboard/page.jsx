@@ -3,7 +3,7 @@ import DashboardInterativo from '@/components/DashboardInterativo';
 export const dynamic = 'force-dynamic';
 
 export default function Dashboard() {
-  const hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Fortaleza' });
   return (
     <>
       <div className="page-head">

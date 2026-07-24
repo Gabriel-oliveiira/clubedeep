@@ -45,7 +45,6 @@ export default function DashboardInterativo() {
     <>
       {/* barra de filtros ativos */}
       <div className="filter-bar">
-        {!temFiltro && <span className="filter-hint">Clique nos graficos para filtrar (janela de 180 dias) — clique de novo para desfazer.</span>}
         {cat && <span className="fchip">Categoria: {labelCategoria(cat)} <button className="x" onClick={() => setCat(null)}>&times;</button></span>}
         {loja && <span className="fchip">Loja: {loja} <button className="x" onClick={() => setLoja(null)}>&times;</button></span>}
         {mes && <span className="fchip">Mes: {mesLabel(mes)} <button className="x" onClick={() => setMes(null)}>&times;</button></span>}
