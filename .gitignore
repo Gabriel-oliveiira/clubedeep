@@ -9,6 +9,9 @@ out/
 .env.*.local
 .env.production
 
+# scripts de carga unica (contem credenciais TOTVS - nao versionar)
+scripts/
+
 # diversos
 npm-debug.log*
 .DS_Store
