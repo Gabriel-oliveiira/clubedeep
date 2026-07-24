@@ -111,15 +111,15 @@ export default async function Clientes({ searchParams }) {
                       {c.nome} {c.em_carencia && <span className="chip carencia">carencia</span>}
                       <span className="sub">#{c.cd_cliente}</span>
                     </td>
-                    <td>
+                    <td style={{ textAlign: 'center' }}>
                       {wa ? (
                         <a href={wa} target="_blank" rel="noopener noreferrer"
-                           style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1da851', fontWeight: 600, whiteSpace: 'nowrap' }}
-                           title="Abrir conversa no WhatsApp">
-                          <IcoWhats /> <span className="num">{c.telefone}</span>
+                           style={{ display: 'inline-flex', color: '#1da851' }}
+                           title={`Abrir conversa no WhatsApp (${c.telefone})`} aria-label="Abrir WhatsApp">
+                          <IcoWhats />
                         </a>
                       ) : (
-                        <span className="muted num">{c.telefone || '-'}</span>
+                        <span className="muted">-</span>
                       )}
                     </td>
                     <td className="muted" style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={c.email || ''}>{c.email || '-'}</td>
