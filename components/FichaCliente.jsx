@@ -1,6 +1,7 @@
-import { brl, pontos, dataBR, labelCategoria, labelEvento, labelOrigem, labelTipoCliente } from '@/lib/format';
+import { pontos, dataBR, labelCategoria, labelEvento, labelTipoCliente } from '@/lib/format';
 import { nomeLoja } from '@/lib/lojas';
 import { IcStar, IcClock, IcTrend, IcAlert } from '@/components/Icons';
+import ExtratoPontos from '@/components/ExtratoPontos';
 
 export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria = [], aexp, lojaUltima, voltar, loja = false }) {
   const cat = saldo?.categoria_efetiva || 'sem_categoria';
@@ -10,8 +11,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
       <div className="page-head">
         <div>
           {voltar && <p style={{ margin: '0 0 6px' }}><a className="muted" href={voltar}>&larr; Clientes</a></p>}
-          <h1>{cliente.nome}</h1>
-          {!loja && <div className="sub num">#{cliente.cd_cliente} {cliente.cpf_cnpj ? `· ${cliente.cpf_cnpj}` : ''}</div>}
+          <h1>{cliente.cd_cliente} - {cliente.nome}</h1>
         </div>
         <span className={`badge ${cat}`} style={{ fontSize: 13, padding: '6px 16px' }}>{labelCategoria(cat)}</span>
       </div>
@@ -61,27 +61,7 @@ export default function FichaCliente({ cliente, saldo, extrato = [], trajetoria 
         </div>
       )}
 
-      <div className="card flush">
-        <div className="card-pad"><h2 style={{ margin: 0 }}>Extrato de pontos</h2></div>
-        <div style={{ overflowX: 'auto' }}>
-          <table>
-            <thead><tr><th>Origem</th><th>Descricao</th><th>Ganho em</th><th>Expira em</th><th>Situacao</th><th style={{ textAlign: 'right' }}>Pontos</th></tr></thead>
-            <tbody>
-              {extrato.map((m, i) => (
-                <tr key={i}>
-                  <td>{labelOrigem(m.origem)}</td>
-                  <td className="muted">{m.descricao}</td>
-                  <td className="num">{dataBR(m.dt_ponto)}</td>
-                  <td className="num">{dataBR(m.dt_expira)}</td>
-                  <td className={m.situacao_ponto === 'expirado' ? 'sit-expirado' : 'sit-valido'}>{m.situacao_ponto}</td>
-                  <td style={{ textAlign: 'right' }} className={`num ${Number(m.pontos) >= 0 ? 'pos' : 'neg'}`}>{Number(m.pontos) >= 0 ? '+' : ''}{pontos(m.pontos)}</td>
-                </tr>
-              ))}
-              {extrato.length === 0 && <tr><td colSpan={6}><div className="empty">Sem lancamentos ainda.</div></td></tr>}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <ExtratoPontos extrato={extrato} />
 
       {!loja && (
         <div className="card flush">
