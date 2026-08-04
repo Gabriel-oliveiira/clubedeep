@@ -9,6 +9,7 @@ export default async function InternoLayout({ children }) {
   if (!a) redirect('/login');
   if (!a.papel) redirect('/acesso-negado');
   if (a.papel === 'loja') redirect('/loja');
+  if (a.papel === 'cliente') redirect('/cliente');
 
   return (
     <div className="shell">

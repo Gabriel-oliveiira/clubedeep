@@ -8,5 +8,6 @@ export default async function Home() {
   if (!a) redirect('/login');
   if (!a.papel) redirect('/acesso-negado');
   if (a.papel === 'loja') redirect('/loja');
+  if (a.papel === 'cliente') redirect('/cliente');
   redirect('/dashboard');
 }
