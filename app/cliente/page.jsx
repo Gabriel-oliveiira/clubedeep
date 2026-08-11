@@ -77,13 +77,13 @@ export default async function AreaCliente() {
 
       {/* Espacos das proximas fases */}
       <div className="grid cols-2">
-        <div className="card">
+        <a href="/cliente/beneficios" className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <h2>Meus beneficios</h2>
           <p className="muted" style={{ fontSize: 14 }}>
-            Aqui vao aparecer os beneficios do seu nivel — convites para eventos, brindes e vantagens exclusivas.
+            Convites para eventos, brindes e vantagens exclusivas do seu nivel.
           </p>
-          <span className="chip">Em breve</span>
-        </div>
+          <span className="chip" style={{ background: 'var(--brand,#6b4f2a)', color: '#fff' }}>Ver beneficios &rarr;</span>
+        </a>
         <a href="/cliente/cursos" className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <h2>Cursos e treinamentos</h2>
           <p className="muted" style={{ fontSize: 14 }}>

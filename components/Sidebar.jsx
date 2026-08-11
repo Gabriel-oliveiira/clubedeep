@@ -1,12 +1,13 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase/client';
-import { IcDashboard, IcUsers, IcLogout, IcSettings, IcCursos } from '@/components/Icons';
+import { IcDashboard, IcUsers, IcLogout, IcSettings, IcCursos, IcStar } from '@/components/Icons';
 
 const NAV = [
   { href: '/dashboard', label: 'Visao geral', Icon: IcDashboard },
   { href: '/clientes', label: 'Clientes', Icon: IcUsers },
   { href: '/cursos', label: 'Cursos', Icon: IcCursos },
+  { href: '/beneficios', label: 'Beneficios', Icon: IcStar },
   { href: '/configuracoes', label: 'Configuracoes', Icon: IcSettings, apenas: 'admin' },
 ];
 
