@@ -15,8 +15,11 @@ export default async function ClienteLayout({ children }) {
   return (
     <>
       <div className="topbar">
-        <img src="/deep-logo.png" alt="DEEP" />
-        <div className="nav">
+        <a href="/cliente" style={{ display: 'inline-flex' }}><img src="/deep-logo.png" alt="DEEP" /></a>
+        <div className="nav" style={{ gap: 16 }}>
+          <a href="/cliente" style={{ fontSize: 13.5 }}>Inicio</a>
+          <a href="/cliente/cursos" style={{ fontSize: 13.5 }}>Cursos</a>
+          <a href="/cliente/beneficios" style={{ fontSize: 13.5 }}>Beneficios</a>
           <span style={{ opacity: .65, fontSize: 12.5 }}>{a.nome || a.email}</span>
           <LogoutButton />
         </div>

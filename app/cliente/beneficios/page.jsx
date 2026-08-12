@@ -16,7 +16,7 @@ export default async function BeneficiosCliente() {
   if (rankNivel(nivel) < 1) {
     return (
       <>
-        <div className="page-head"><div><h1>Meus beneficios</h1></div></div>
+        <div className="page-head"><div><p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p><h1>Meus beneficios</h1></div></div>
         <div className="card">
           <h2>Beneficios liberados a partir do Bronze</h2>
           <p className="muted">Assim que voce atingir o nivel <b>Bronze</b>, seus beneficios aparecem aqui. Continue comprando para desbloquear.</p>
@@ -33,7 +33,10 @@ export default async function BeneficiosCliente() {
   return (
     <>
       <div className="page-head">
-        <div><h1>Meus beneficios</h1><div className="sub">Seu nivel: {labelCategoria(nivel)}</div></div>
+        <div>
+          <p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p>
+          <h1>Meus beneficios</h1><div className="sub">Seu nivel: {labelCategoria(nivel)}</div>
+        </div>
       </div>
 
       {liberados.length === 0 ? (
