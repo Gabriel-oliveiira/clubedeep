@@ -20,7 +20,7 @@ a{color:inherit;text-decoration:none}
 .shell{display:flex;min-height:100vh}
 .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg,var(--brand-deep) 0%,var(--brand-deeper) 100%);color:#e9e2d8;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .sidebar .logo{padding:26px 22px 20px;border-bottom:1px solid rgba(233,226,216,.08)}
-.sidebar .logo img{width:112px;display:block}
+.sidebar .logo img{width:150px;display:block}
 .sidebar .logo small{display:block;margin-top:6px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(233,226,216,.45)}
 .sidebar nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
 .sidebar nav .sec{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(233,226,216,.35);padding:14px 12px 6px}
@@ -45,7 +45,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:880px){
   .cli-shell{display:block}
   .cli-shell .m-top{display:flex;align-items:center;gap:14px;background:var(--brand-deep);color:#e9e2d8;padding:0 14px;height:56px;position:sticky;top:0;z-index:40}
-  .cli-shell .m-top img{height:26px;width:auto;display:block}
+  .cli-shell .m-top img{width:118px;height:auto;display:block}
   .cli-shell .m-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50}
   .sidebar.cli{position:fixed;left:0;top:0;height:100vh;z-index:60;transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 0 40px rgba(0,0,0,.35)}
   .sidebar.cli.aberto{transform:translateX(0)}
@@ -137,7 +137,7 @@ button:active{transform:translateY(1px)}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(1200px 700px at 75% -10%,#3a2b21 0%,var(--brand-deep) 55%,var(--brand-deeper) 100%);padding:20px}
 .login-box{width:390px;max-width:94vw}
 .login-logo{text-align:center;margin-bottom:26px}
-.login-logo img{width:130px}
+.login-logo img{width:200px}
 .login-logo small{display:block;margin-top:8px;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:rgba(233,226,216,.55)}
 .login-card{background:var(--card);border-radius:18px;padding:30px 28px;box-shadow:var(--shadow-lg)}
 .tabs{display:flex;gap:6px;margin-bottom:20px;background:#f2ece5;padding:4px;border-radius:11px}
@@ -157,7 +157,7 @@ button:active{transform:translateY(1px)}
 /* topbar simples (area da loja) */
 .topbar{background:var(--brand-deep);color:#e9e2d8;padding:0 22px;display:flex;align-items:center;height:62px}
 .topbar-in{max-width:1050px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.topbar img{height:30px;width:auto;display:block}
+.topbar img{width:130px;height:auto;display:block}
 .topbar .nav{display:flex;align-items:center;gap:16px;font-size:13px}
 .topbar .nav a{opacity:.85}
 .topbar .nav a:hover{opacity:1}
