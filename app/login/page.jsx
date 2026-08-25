@@ -54,7 +54,6 @@ export default function Login() {
       <div className="login-box">
         <div className="login-logo">
           <img src="/deep-logo.png" alt="DEEP" />
-          <small>Clube Deep</small>
         </div>
         <div className="login-card">
           <div className="tabs">

@@ -54,7 +54,7 @@ export default function Cadastro() {
       <div className="login-box">
         <div className="login-logo">
           <img src="/deep-logo.png" alt="DEEP" />
-          <small>Clube Deep &middot; Criar acesso</small>
+          <small>Criar acesso</small>
         </div>
         <div className="login-card">
           {semAcesso ? (

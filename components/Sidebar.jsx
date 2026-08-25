@@ -26,7 +26,6 @@ export default function Sidebar({ email, papel }) {
     <aside className="sidebar">
       <div className="logo">
         <img src="/deep-logo.png" alt="DEEP" />
-        <small>Clube Deep</small>
       </div>
       <nav>
         <div className="sec">Menu</div>

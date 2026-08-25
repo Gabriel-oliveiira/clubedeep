@@ -33,7 +33,7 @@ export default function SidebarCliente({ nome, email }) {
       {aberto && <div className="m-overlay" onClick={() => setAberto(false)} />}
 
       <aside className={`sidebar cli ${aberto ? 'aberto' : ''}`}>
-        <div className="logo"><a href="/cliente" style={{ display: 'inline-flex' }}><img src="/deep-logo.png" alt="DEEP" /></a><small>Clube Deep</small></div>
+        <div className="logo"><a href="/cliente" style={{ display: 'inline-flex' }}><img src="/deep-logo.png" alt="DEEP" /></a></div>
         <nav>
           <div className="sec">Menu</div>
           {NAV.map(({ href, label, Icon }) => (
