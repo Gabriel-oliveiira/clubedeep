@@ -98,7 +98,7 @@ function AulaLinha({ aula, indice, primeira }) {
   return (
     <div style={{ padding: '12px 16px', borderTop: primeira ? 0 : '1px solid var(--linha,#f0eae2)' }}>
       {!edit ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span className="muted num" style={{ width: 18 }}>{indice + 1}</span>
           <img src={thumbYoutube(aula.youtube_id, 'mqdefault')} alt="" style={{ width: 72, height: 40, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
           <div style={{ flex: 1 }}>

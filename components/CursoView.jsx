@@ -33,7 +33,7 @@ export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }
   const atualConcluida = concluidas.has(atual.id);
 
   return (
-    <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 320px', gap: 18, alignItems: 'start' }}>
+    <div className="curso-grid">
       <div>
         <PlayerAula key={atual.id} youtubeId={atual.youtube_id} onConcluir={() => marcar(atual.id, true)} />
         <div className="card" style={{ marginTop: 14 }}>
@@ -73,7 +73,7 @@ export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }
                   background: ok ? '#1da851' : '#e3d9c9', color: ok ? '#fff' : '#7a6f5f',
                 }}>{ok ? '✓' : i + 1}</span>
                 <img src={thumbYoutube(a.youtube_id, 'mqdefault')} alt="" style={{ width: 62, height: 35, objectFit: 'cover', borderRadius: 5, flexShrink: 0 }} />
-                <span style={{ fontSize: 13, fontWeight: sel ? 700 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</span>
+                <span style={{ fontSize: 13, fontWeight: sel ? 700 : 400, color: 'var(--ink,#2a2018)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</span>
               </button>
             );
           })}

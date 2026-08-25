@@ -13,7 +13,7 @@ async function chamar(body) {
 
 export default function GestaoBeneficios({ beneficios = [] }) {
   const router = useRouter();
-  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze' });
+  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze', imagem_url: '', conteudo: '', como_resgatar: '' });
   const [msg, setMsg] = useState(null);
 
   async function criar(e) {
@@ -21,7 +21,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
     if (!novo.titulo.trim()) { setMsg('Informe o titulo.'); return; }
     const { ok } = await chamar({ op: 'beneficio_criar', ...novo });
     if (!ok) { setMsg('Erro ao criar.'); return; }
-    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze' }); router.refresh();
+    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze', imagem_url: '', conteudo: '', como_resgatar: '' }); router.refresh();
   }
 
   return (
@@ -35,7 +35,10 @@ export default function GestaoBeneficios({ beneficios = [] }) {
           </select>
           <button type="submit">Adicionar</button>
         </div>
-        <input value={novo.descricao} onChange={e => setNovo({ ...novo, descricao: e.target.value })} placeholder="Descricao (opcional)" style={{ width: '100%', marginTop: 10 }} />
+        <input value={novo.descricao} onChange={e => setNovo({ ...novo, descricao: e.target.value })} placeholder="Descricao curta (aparece no card)" style={{ width: '100%', marginTop: 10 }} />
+        <input value={novo.imagem_url} onChange={e => setNovo({ ...novo, imagem_url: e.target.value })} placeholder="URL da imagem (opcional)" style={{ width: '100%', marginTop: 8 }} />
+        <textarea value={novo.conteudo} onChange={e => setNovo({ ...novo, conteudo: e.target.value })} placeholder="Conteudo completo da pagina do beneficio (texto que o cliente le)" rows={4} style={{ width: '100%', marginTop: 8 }} />
+        <textarea value={novo.como_resgatar} onChange={e => setNovo({ ...novo, como_resgatar: e.target.value })} placeholder="Como resgatar / instrucoes (opcional)" rows={2} style={{ width: '100%', marginTop: 8 }} />
         {msg && <div className="msg err" style={{ marginTop: 10 }}>{msg}</div>}
       </form>
 
@@ -61,7 +64,7 @@ function Linha({ b, primeira }) {
   return (
     <div style={{ padding: '12px 16px', borderTop: primeira ? 0 : '1px solid var(--linha,#f0eae2)' }}>
       {!edit ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span className={`badge ${b.nivel_minimo}`} style={{ flexShrink: 0 }}>{labelCategoria(b.nivel_minimo)}+</span>
           <div style={{ flex: 1 }}>
             <b>{b.titulo}</b> {!b.ativo && <span className="chip">inativo</span>}
