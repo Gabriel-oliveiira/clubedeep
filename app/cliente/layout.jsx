@@ -15,13 +15,15 @@ export default async function ClienteLayout({ children }) {
   return (
     <>
       <div className="topbar">
-        <a href="/cliente" style={{ display: 'inline-flex' }}><img src="/deep-logo.png" alt="DEEP" /></a>
-        <div className="nav" style={{ gap: 16 }}>
-          <a href="/cliente" style={{ fontSize: 13.5 }}>Inicio</a>
-          <a href="/cliente/cursos" style={{ fontSize: 13.5 }}>Cursos</a>
-          <a href="/cliente/beneficios" style={{ fontSize: 13.5 }}>Beneficios</a>
-          <span style={{ opacity: .65, fontSize: 12.5 }}>{a.nome || a.email}</span>
-          <LogoutButton />
+        <div className="topbar-in">
+          <a href="/cliente" style={{ display: 'inline-flex' }}><img src="/deep-logo.png" alt="DEEP" /></a>
+          <div className="nav" style={{ gap: 16 }}>
+            <a href="/cliente" style={{ fontSize: 13.5 }}>Inicio</a>
+            <a href="/cliente/cursos" style={{ fontSize: 13.5 }}>Cursos</a>
+            <a href="/cliente/beneficios" style={{ fontSize: 13.5 }}>Beneficios</a>
+            <a href="/perfil" style={{ fontSize: 12.5, opacity: .8 }} title="Meu perfil">{a.nome || a.email}</a>
+            <LogoutButton />
+          </div>
         </div>
       </div>
       <div className="container">{children}</div>

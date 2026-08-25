@@ -18,7 +18,7 @@ export async function GET() {
 
   const { data, error } = await supabaseAdmin
     .from('painel_acessos')
-    .select('email, papel, cd_cliente, criado_em')
+    .select('email, papel, cd_cliente, nome, ativo, criado_em')
     .order('papel', { ascending: true })
     .order('email', { ascending: true });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -46,7 +46,7 @@ export async function POST(request) {
   const cd_cliente = body.cd_cliente ? String(body.cd_cliente) : null;
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return NextResponse.json({ error: 'E-mail invalido.' }, { status: 400 });
-  if (!['admin', 'suporte', 'loja'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
+  if (!['admin', 'suporte', 'comercial', 'loja'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
 
   if (papel === 'loja') {
     if (!cd_cliente) return NextResponse.json({ error: 'Selecione a loja (cliente) para vincular.' }, { status: 400 });
@@ -66,6 +66,34 @@ export async function POST(request) {
     .upsert({ email, papel, cd_cliente: papel === 'loja' ? cd_cliente : null }, { onConflict: 'email' });
   if (eAcc) return NextResponse.json({ error: eAcc.message }, { status: 500 });
 
+  return NextResponse.json({ ok: true });
+}
+
+// Edita acesso: { email, papel?, nome?, ativo? }
+export async function PATCH(request) {
+  const a = await exigeAdmin();
+  if (!a) return NextResponse.json({ error: 'sem permissao' }, { status: 403 });
+
+  const body = await request.json().catch(() => ({}));
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!email) return NextResponse.json({ error: 'E-mail obrigatorio.' }, { status: 400 });
+
+  const patch = {};
+  if (body.papel != null) {
+    const papel = String(body.papel);
+    if (!['admin', 'suporte', 'comercial', 'loja', 'cliente'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
+    if (email === a.email && papel !== 'admin') return NextResponse.json({ error: 'Voce nao pode rebaixar o proprio acesso.' }, { status: 400 });
+    patch.papel = papel;
+  }
+  if (body.nome != null) patch.nome = String(body.nome).trim() || null;
+  if (body.ativo != null) {
+    if (email === a.email && body.ativo === false) return NextResponse.json({ error: 'Voce nao pode desativar o proprio acesso.' }, { status: 400 });
+    patch.ativo = !!body.ativo;
+  }
+  if (Object.keys(patch).length === 0) return NextResponse.json({ error: 'Nada para atualizar.' }, { status: 400 });
+
+  const { error } = await supabaseAdmin.from('painel_acessos').update(patch).eq('email', email);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }
 

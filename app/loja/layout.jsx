@@ -12,8 +12,10 @@ export default async function LojaLayout({ children }) {
   return (
     <>
       <div className="topbar">
-        <img src="/deep-logo.png" alt="DEEP" />
-        <div className="nav"><span style={{opacity:.65,fontSize:12.5}}>{a.email}</span><LogoutButton /></div>
+        <div className="topbar-in">
+          <img src="/deep-logo.png" alt="DEEP" />
+          <div className="nav"><span style={{opacity:.65,fontSize:12.5}}>{a.email}</span><LogoutButton /></div>
+        </div>
       </div>
       <div className="container">{children}</div>
     </>

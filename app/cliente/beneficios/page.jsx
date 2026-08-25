@@ -44,11 +44,12 @@ export default async function BeneficiosCliente() {
       ) : (
         <div className="grid cols-3">
           {liberados.map(b => (
-            <div key={b.id} className="card" style={{ borderTop: '3px solid var(--brand-2,#c99a5b)' }}>
+            <a key={b.id} href={`/cliente/beneficios/${b.id}`} className="card" style={{ borderTop: '3px solid var(--brand-2,#c99a5b)', textDecoration: 'none', color: 'inherit', display: 'block' }}>
+              {b.imagem_url && <img src={b.imagem_url} alt="" style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
               <span className={`badge ${b.nivel_minimo}`} style={{ marginBottom: 8, display: 'inline-block' }}>{labelCategoria(b.nivel_minimo)}</span>
               <h2 style={{ margin: '4px 0' }}>{b.titulo}</h2>
               {b.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 0 }}>{b.descricao}</p>}
-            </div>
+            </a>
           ))}
         </div>
       )}

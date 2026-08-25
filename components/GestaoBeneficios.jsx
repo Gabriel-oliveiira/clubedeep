@@ -52,7 +52,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
 function Linha({ b, primeira }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false);
-  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo });
+  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo, imagem_url: b.imagem_url || '', conteudo: b.conteudo || '', como_resgatar: b.como_resgatar || '' });
 
   async function salvar() { const { ok } = await chamar({ op: 'beneficio_editar', id: b.id, ...f }); if (ok) { setEdit(false); router.refresh(); } }
   async function toggle() { await chamar({ op: 'beneficio_editar', id: b.id, ativo: !b.ativo }); router.refresh(); }
@@ -81,7 +81,10 @@ function Linha({ b, primeira }) {
             <button type="button" onClick={salvar}>Salvar</button>
             <button type="button" className="btn-ghost" onClick={() => setEdit(false)}>Cancelar</button>
           </div>
-          <input value={f.descricao} onChange={e => setF({ ...f, descricao: e.target.value })} placeholder="Descricao" style={{ width: '100%', marginTop: 8 }} />
+          <input value={f.descricao} onChange={e => setF({ ...f, descricao: e.target.value })} placeholder="Descricao curta (aparece no card)" style={{ width: '100%', marginTop: 8 }} />
+          <input value={f.imagem_url} onChange={e => setF({ ...f, imagem_url: e.target.value })} placeholder="URL da imagem (opcional)" style={{ width: '100%', marginTop: 8 }} />
+          <textarea value={f.conteudo} onChange={e => setF({ ...f, conteudo: e.target.value })} placeholder="Conteudo completo da pagina do beneficio" rows={4} style={{ width: '100%', marginTop: 8 }} />
+          <textarea value={f.como_resgatar} onChange={e => setF({ ...f, como_resgatar: e.target.value })} placeholder="Como resgatar / instrucoes (opcional)" rows={2} style={{ width: '100%', marginTop: 8 }} />
         </div>
       )}
     </div>

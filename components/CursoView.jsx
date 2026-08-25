@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import PlayerAula from '@/components/PlayerAula';
+import { thumbYoutube } from '@/lib/youtube';
 
 export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }) {
   const [concluidas, setConcluidas] = useState(new Set(concluidasIniciais));
@@ -67,11 +68,12 @@ export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }
                   background: sel ? 'var(--brand-suave,#f6efe6)' : 'transparent', cursor: 'pointer',
                 }}>
                 <span style={{
-                  width: 22, height: 22, borderRadius: '50%', flexShrink: 0, fontSize: 12,
+                  width: 20, height: 20, borderRadius: '50%', flexShrink: 0, fontSize: 11,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: ok ? '#1da851' : '#e3d9c9', color: ok ? '#fff' : '#7a6f5f',
                 }}>{ok ? '✓' : i + 1}</span>
-                <span style={{ fontSize: 13.5, fontWeight: sel ? 700 : 400 }}>{a.titulo}</span>
+                <img src={thumbYoutube(a.youtube_id, 'mqdefault')} alt="" style={{ width: 62, height: 35, objectFit: 'cover', borderRadius: 5, flexShrink: 0 }} />
+                <span style={{ fontSize: 13, fontWeight: sel ? 700 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</span>
               </button>
             );
           })}

@@ -37,10 +37,10 @@ export default function Sidebar({ email, papel }) {
         ))}
       </nav>
       <div className="foot">
-        <div className="who">
+        <a href="/perfil" className="who" style={{ textDecoration: 'none', color: 'inherit' }} title="Meu perfil">
           <div className="avatar">{inicial}</div>
-          <div><b>{email}</b><span>{papel}</span></div>
-        </div>
+          <div><b>{email}</b><span>{papel} · ver perfil</span></div>
+        </a>
         <a href="#" onClick={sair}><IcLogout style={{width:14,height:14}} /> Sair</a>
       </div>
     </aside>

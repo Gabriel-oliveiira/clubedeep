@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { thumbYoutube } from '@/lib/youtube';
 
 const NIVEIS = [['bronze', 'Bronze'], ['prata', 'Prata'], ['ouro', 'Ouro'], ['platina', 'Platina']];
 
@@ -12,7 +13,7 @@ async function chamar(body) {
 
 export default function GestaoCurso({ curso, aulas = [] }) {
   const router = useRouter();
-  const [c, setC] = useState({ titulo: curso.titulo, descricao: curso.descricao || '', nivel_minimo: curso.nivel_minimo, ativo: curso.ativo });
+  const [c, setC] = useState({ titulo: curso.titulo, descricao: curso.descricao || '', nivel_minimo: curso.nivel_minimo, ativo: curso.ativo, capa_url: curso.capa_url || '' });
   const [msg, setMsg] = useState(null);
   const [nova, setNova] = useState({ titulo: '', descricao: '', youtube: '' });
 
@@ -49,6 +50,10 @@ export default function GestaoCurso({ curso, aulas = [] }) {
           </label>
         </div>
         <input value={c.descricao} onChange={e => setC({ ...c, descricao: e.target.value })} placeholder="Descricao" style={{ width: '100%', marginTop: 10 }} />
+        <div style={{ display: 'flex', gap: 12, marginTop: 10, alignItems: 'center' }}>
+          <input value={c.capa_url} onChange={e => setC({ ...c, capa_url: e.target.value })} placeholder="URL da capa (imagem) — opcional" style={{ flex: 1 }} />
+          {c.capa_url && <img src={c.capa_url} alt="" style={{ width: 90, height: 52, objectFit: 'cover', borderRadius: 8 }} />}
+        </div>
         <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
           <button type="submit">Salvar curso</button>
           <button type="button" className="btn-ghost" onClick={excluirCurso} style={{ color: '#c0392b' }}>Excluir curso</button>
@@ -94,7 +99,8 @@ function AulaLinha({ aula, indice, primeira }) {
     <div style={{ padding: '12px 16px', borderTop: primeira ? 0 : '1px solid var(--linha,#f0eae2)' }}>
       {!edit ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span className="muted num" style={{ width: 22 }}>{indice + 1}</span>
+          <span className="muted num" style={{ width: 18 }}>{indice + 1}</span>
+          <img src={thumbYoutube(aula.youtube_id, 'mqdefault')} alt="" style={{ width: 72, height: 40, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
             <b>{aula.titulo}</b> {!aula.ativo && <span className="chip">inativa</span>}
             <span className="sub num">YouTube: {aula.youtube_id}</span>

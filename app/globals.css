@@ -20,7 +20,7 @@ a{color:inherit;text-decoration:none}
 .shell{display:flex;min-height:100vh}
 .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg,var(--brand-deep) 0%,var(--brand-deeper) 100%);color:#e9e2d8;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .sidebar .logo{padding:26px 22px 20px;border-bottom:1px solid rgba(233,226,216,.08)}
-.sidebar .logo img{width:96px;display:block}
+.sidebar .logo img{width:112px;display:block}
 .sidebar .logo small{display:block;margin-top:6px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(233,226,216,.45)}
 .sidebar nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
 .sidebar nav .sec{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(233,226,216,.35);padding:14px 12px 6px}
@@ -142,8 +142,9 @@ button:active{transform:translateY(1px)}
 .sit-expirado{color:var(--bad)} .sit-valido{color:var(--muted)}
 
 /* topbar simples (area da loja) */
-.topbar{background:var(--brand-deep);color:#e9e2d8;padding:0 26px;display:flex;align-items:center;justify-content:space-between;height:62px}
-.topbar img{width:78px;display:block}
+.topbar{background:var(--brand-deep);color:#e9e2d8;padding:0 22px;display:flex;align-items:center;height:62px}
+.topbar-in{max-width:1050px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.topbar img{height:30px;width:auto;display:block}
 .topbar .nav{display:flex;align-items:center;gap:16px;font-size:13px}
 .topbar .nav a{opacity:.85}
 .topbar .nav a:hover{opacity:1}

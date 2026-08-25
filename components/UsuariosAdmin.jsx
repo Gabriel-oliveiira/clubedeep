@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-const PAPEL_LABEL = { admin: 'Admin', suporte: 'Equipe (suporte)', loja: 'Loja' };
+const PAPEL_LABEL = { admin: 'Admin', comercial: 'Comercial', suporte: 'Equipe (suporte)', loja: 'Loja', cliente: 'Cliente' };
+const PAPEIS_EDITAVEIS = [['admin', 'Admin'], ['comercial', 'Comercial'], ['suporte', 'Equipe (suporte)'], ['loja', 'Loja'], ['cliente', 'Cliente']];
 
 export default function UsuariosAdmin({ meuEmail }) {
   const [usuarios, setUsuarios] = useState([]);
@@ -17,6 +18,7 @@ export default function UsuariosAdmin({ meuEmail }) {
   const [sugestoes, setSugestoes] = useState([]);
   const [msg, setMsg] = useState(null);
   const [salvando, setSalvando] = useState(false);
+  const [edit, setEdit] = useState(null); // { email, papel, nome, ativo }
   const debounce = useRef(null);
 
   async function carregar() {
@@ -56,6 +58,13 @@ export default function UsuariosAdmin({ meuEmail }) {
     carregar();
   }
 
+  async function salvarEdicao() {
+    const r = await fetch('/api/usuarios', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(edit) });
+    const j = await r.json();
+    if (!r.ok) { alert(j.error || 'Erro ao salvar.'); return; }
+    setEdit(null); carregar();
+  }
+
   async function revogar(em) {
     if (!confirm(`Revogar o acesso de ${em}?`)) return;
     const r = await fetch('/api/usuarios', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em }) });
@@ -84,6 +93,7 @@ export default function UsuariosAdmin({ meuEmail }) {
               <label>Papel</label>
               <select value={papel} onChange={e => { setPapel(e.target.value); setMsg(null); }}>
                 <option value="suporte">Equipe (suporte)</option>
+                <option value="comercial">Comercial</option>
                 <option value="admin">Admin</option>
                 <option value="loja">Loja</option>
               </select>
@@ -145,23 +155,47 @@ export default function UsuariosAdmin({ meuEmail }) {
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table>
-            <thead><tr><th>E-mail</th><th>Papel</th><th>Loja vinculada</th><th>Criado em</th><th></th></tr></thead>
+            <thead><tr><th>E-mail</th><th>Nome</th><th>Papel</th><th>Cliente</th><th>Status</th><th></th></tr></thead>
             <tbody>
-              {carregando && <tr><td colSpan={5}><div className="empty">Carregando...</div></td></tr>}
+              {carregando && <tr><td colSpan={6}><div className="empty">Carregando...</div></td></tr>}
               {!carregando && lista.map(u => (
-                <tr key={u.email}>
-                  <td>{u.email}{u.email === meuEmail && <span className="chip ativa" style={{ marginLeft: 8 }}>voce</span>}</td>
-                  <td><span className="badge" style={{ background: u.papel === 'admin' ? 'var(--brand)' : u.papel === 'suporte' ? 'var(--brand-2)' : 'var(--semcat)' }}>{PAPEL_LABEL[u.papel] || u.papel}</span></td>
-                  <td className="muted">{u.cd_cliente ? `#${u.cd_cliente}${u.loja_nome ? ` — ${u.loja_nome}` : ''}` : '-'}</td>
-                  <td className="muted num">{u.criado_em ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '-'}</td>
-                  <td style={{ textAlign: 'right' }}>
-                    {u.email !== meuEmail && (
-                      <button type="button" className="btn-ghost" style={{ color: 'var(--bad)', borderColor: '#e8c9c9' }} onClick={() => revogar(u.email)}>Revogar</button>
-                    )}
-                  </td>
-                </tr>
+                edit && edit.email === u.email ? (
+                  <tr key={u.email}>
+                    <td>{u.email}</td>
+                    <td><input value={edit.nome || ''} onChange={e => setEdit({ ...edit, nome: e.target.value })} placeholder="Nome" style={{ width: 140 }} /></td>
+                    <td>
+                      <select value={edit.papel} onChange={e => setEdit({ ...edit, papel: e.target.value })}>
+                        {PAPEIS_EDITAVEIS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                      </select>
+                    </td>
+                    <td className="muted">{u.cd_cliente ? `#${u.cd_cliente}` : '-'}</td>
+                    <td>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5 }}>
+                        <input type="checkbox" checked={edit.ativo} onChange={e => setEdit({ ...edit, ativo: e.target.checked })} /> Ativo
+                      </label>
+                    </td>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                      <button type="button" onClick={salvarEdicao}>Salvar</button>
+                      <button type="button" className="btn-ghost" onClick={() => setEdit(null)} style={{ marginLeft: 6 }}>Cancelar</button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={u.email}>
+                    <td>{u.email}{u.email === meuEmail && <span className="chip ativa" style={{ marginLeft: 8 }}>voce</span>}</td>
+                    <td className="muted">{u.nome || '-'}</td>
+                    <td><span className="badge" style={{ background: u.papel === 'admin' ? 'var(--brand)' : u.papel === 'suporte' || u.papel === 'comercial' ? 'var(--brand-2)' : 'var(--semcat)' }}>{PAPEL_LABEL[u.papel] || u.papel}</span></td>
+                    <td className="muted">{u.cd_cliente ? `#${u.cd_cliente}${u.loja_nome ? ` — ${u.loja_nome}` : ''}` : '-'}</td>
+                    <td>{u.ativo === false ? <span className="chip">inativo</span> : <span className="chip ativa">ativo</span>}</td>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                      <button type="button" className="btn-ghost" onClick={() => setEdit({ email: u.email, papel: u.papel, nome: u.nome || '', ativo: u.ativo !== false })}>Editar</button>
+                      {u.email !== meuEmail && (
+                        <button type="button" className="btn-ghost" style={{ color: 'var(--bad)', borderColor: '#e8c9c9', marginLeft: 6 }} onClick={() => revogar(u.email)}>Revogar</button>
+                      )}
+                    </td>
+                  </tr>
+                )
               ))}
-              {!carregando && lista.length === 0 && <tr><td colSpan={5}><div className="empty">Nenhum acesso encontrado.</div></td></tr>}
+              {!carregando && lista.length === 0 && <tr><td colSpan={6}><div className="empty">Nenhum acesso encontrado.</div></td></tr>}
             </tbody>
           </table>
         </div>

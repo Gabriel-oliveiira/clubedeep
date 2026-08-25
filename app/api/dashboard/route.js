@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 // Dados do dashboard interativo (admin e suporte)
 export async function GET(request) {
   const a = await getAcesso();
-  if (!a || !['admin', 'suporte'].includes(a.papel)) {
+  if (!a || !['admin', 'suporte', 'comercial'].includes(a.papel)) {
     return NextResponse.json({ error: 'sem permissao' }, { status: 403 });
   }
 
@@ -15,9 +15,11 @@ export async function GET(request) {
   const cat = searchParams.get('cat') || null;
   const loja = searchParams.get('loja') || null;
   const mes = searchParams.get('mes') || null;
+  const ini = searchParams.get('ini') || null;
+  const fim = searchParams.get('fim') || null;
 
   const { data, error } = await supabaseAdmin.rpc('dash_clube', {
-    p_cat: cat, p_loja: loja, p_mes: mes,
+    p_cat: cat, p_loja: loja, p_mes: mes, p_ini: ini, p_fim: fim,
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data || {});

@@ -15,6 +15,8 @@ export default function DashboardInterativo() {
   const [cat, setCat] = useState(null);
   const [loja, setLoja] = useState(null);
   const [mes, setMes] = useState(null);
+  const [ini, setIni] = useState('');
+  const [fim, setFim] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,14 +25,16 @@ export default function DashboardInterativo() {
     if (cat) p.set('cat', cat);
     if (loja) p.set('loja', loja);
     if (mes) p.set('mes', mes);
+    if (ini) p.set('ini', ini);
+    if (fim) p.set('fim', fim);
     setLoading(true);
     fetch(`/api/dashboard?${p.toString()}`)
       .then(r => r.json())
       .then(j => { setData(j); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [cat, loja, mes]);
+  }, [cat, loja, mes, ini, fim]);
 
-  const temFiltro = cat || loja || mes;
+  const temFiltro = cat || loja || mes || ini || fim;
   const k = data?.kpis || { clientes: 0, valor: 0, pontos: 0, transacoes: 0 };
   const saude = data?.saude || { em_carencia: 0, expira_30d: 0 };
 
@@ -43,12 +47,22 @@ export default function DashboardInterativo() {
 
   return (
     <>
+      {/* filtro de periodo */}
+      <div className="filter-bar" style={{ alignItems: 'center' }}>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>Periodo:</span>
+        <input type="date" value={ini} max={fim || undefined} onChange={e => setIni(e.target.value)} style={{ padding: '6px 8px' }} />
+        <span style={{ color: 'var(--muted)' }}>ate</span>
+        <input type="date" value={fim} min={ini || undefined} onChange={e => setFim(e.target.value)} style={{ padding: '6px 8px' }} />
+        {(ini || fim) && <button className="limpar" onClick={() => { setIni(''); setFim(''); }}>Limpar periodo</button>}
+        <span style={{ fontSize: 11.5, color: 'var(--muted)' }}>{!ini && !fim ? '(padrao: ultimos 180 dias)' : ''}</span>
+      </div>
+
       {/* barra de filtros ativos */}
       <div className="filter-bar">
         {cat && <span className="fchip">Nivel: {labelCategoria(cat)} <button className="x" onClick={() => setCat(null)}>&times;</button></span>}
         {loja && <span className="fchip">Loja: {loja} <button className="x" onClick={() => setLoja(null)}>&times;</button></span>}
         {mes && <span className="fchip">Mes: {mesLabel(mes)} <button className="x" onClick={() => setMes(null)}>&times;</button></span>}
-        {temFiltro && <button className="limpar" onClick={() => { setCat(null); setLoja(null); setMes(null); }}>Limpar filtros</button>}
+        {temFiltro && <button className="limpar" onClick={() => { setCat(null); setLoja(null); setMes(null); setIni(''); setFim(''); }}>Limpar filtros</button>}
       </div>
 
       <div className={loading ? 'loading-fade' : ''}>
