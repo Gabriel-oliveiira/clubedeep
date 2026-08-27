@@ -207,6 +207,21 @@ button:hover{box-shadow:0 4px 14px -6px rgba(107,78,61,.5)}
 .card h2{color:#a2968a}
 /* transicao global suave em cores/bordas de elementos interativos */
 .nav-item,.btn-ghost,.pager a,.fchip,.tabs button{transition:all .18s var(--ease)}
+/* abas da ficha: topo (desktop) x barra inferior com icones (mobile) */
+.ftabs-top{max-width:560px;margin-bottom:20px}
+.ficha-title-mobile{display:none}
+.ftabs-bottom{display:none}
+.ftabs-spacer{display:none}
+@media(max-width:700px){
+  .ftabs-top{display:none}
+  .ficha-title-mobile{display:block;font-family:var(--font-display);font-size:19px;font-weight:600;margin:2px 0 14px}
+  .ftabs-spacer{display:block;height:76px}
+  .ftabs-bottom{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:35;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 22px -12px rgba(36,27,22,.22);padding:6px 4px;justify-content:space-around;padding-bottom:max(6px,env(safe-area-inset-bottom))}
+  .ftabs-bottom button{background:none;border:0;box-shadow:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:6px 6px;flex:1;min-width:0}
+  .ftabs-bottom button:hover{background:none;box-shadow:none}
+  .ftabs-bottom button svg{width:21px;height:21px}
+  .ftabs-bottom button.active{color:var(--brand)}
+}
 /* respeita quem prefere menos movimento */
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}

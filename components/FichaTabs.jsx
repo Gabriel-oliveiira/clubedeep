@@ -2,14 +2,15 @@
 import { useState } from 'react';
 import { pontos, labelCategoria, labelTipoCliente, labelEvento, dataBR } from '@/lib/format';
 import { nomeLoja } from '@/lib/lojas';
+import { IcUsers, IcClock, IcTrend, IcStar } from '@/components/Icons';
 import ExtratoPontos from '@/components/ExtratoPontos';
 import BeneficiosClienteAdmin from '@/components/BeneficiosClienteAdmin';
 
 const ABAS = [
-  ['ficha', 'Ficha'],
-  ['extrato', 'Extrato de pontos'],
-  ['trajetoria', 'Trajetoria'],
-  ['beneficios', 'Beneficios'],
+  ['ficha', 'Ficha', IcUsers],
+  ['extrato', 'Extrato de pontos', IcClock],
+  ['trajetoria', 'Trajetoria', IcTrend],
+  ['beneficios', 'Beneficios', IcStar],
 ];
 
 export default function FichaTabs({ cliente, saldo, extrato = [], trajetoria = [], aexp, lojaUltima, nivel, beneficios = [], resgatesIniciais = [], voltar = '/clientes' }) {
@@ -26,11 +27,14 @@ export default function FichaTabs({ cliente, saldo, extrato = [], trajetoria = [
         <span className={`badge ${cat}`} style={{ fontSize: 13, padding: '6px 16px' }}>{labelCategoria(cat)}</span>
       </div>
 
-      <div className="tabs" style={{ maxWidth: 560, marginBottom: 20 }}>
+      {/* desktop: abas com texto */}
+      <div className="tabs ftabs-top">
         {ABAS.map(([k, l]) => (
           <button key={k} type="button" className={aba === k ? 'active' : ''} onClick={() => setAba(k)}>{l}</button>
         ))}
       </div>
+      {/* mobile: titulo da secao atual */}
+      <h2 className="ficha-title-mobile">{(ABAS.find(x => x[0] === aba) || [])[1]}</h2>
 
       {aba === 'ficha' && (
         <>
@@ -89,6 +93,19 @@ export default function FichaTabs({ cliente, saldo, extrato = [], trajetoria = [
       {aba === 'beneficios' && (
         <BeneficiosClienteAdmin cdCliente={cliente.cd_cliente} nivel={cat} beneficios={beneficios} resgatesIniciais={resgatesIniciais} />
       )}
+
+      {/* mobile: barra inferior com icones */}
+      <div className="ftabs-spacer" />
+      <nav className="ftabs-bottom">
+        {ABAS.map(([k, , Icon], i) => {
+          const curto = ['Ficha', 'Extrato', 'Trajetoria', 'Beneficios'][i];
+          return (
+            <button key={k} type="button" className={aba === k ? 'active' : ''} onClick={() => setAba(k)} aria-label={curto}>
+              <Icon /><span>{curto}</span>
+            </button>
+          );
+        })}
+      </nav>
     </>
   );
 }
