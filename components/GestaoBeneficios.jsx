@@ -1,9 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { labelCategoria } from '@/lib/format';
+import { labelCategoria, labelPeriodicidade } from '@/lib/format';
 
 const NIVEIS = [['bronze', 'Bronze'], ['prata', 'Prata'], ['ouro', 'Ouro'], ['platina', 'Platina']];
+const PERIODOS = [['unico', 'Único'], ['mensal', 'Mensal'], ['anual', 'Anual']];
 
 async function chamar(body) {
   const r = await fetch('/api/beneficios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -13,7 +14,7 @@ async function chamar(body) {
 
 export default function GestaoBeneficios({ beneficios = [] }) {
   const router = useRouter();
-  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze', imagem_url: '', conteudo: '', como_resgatar: '' });
+  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', imagem_url: '', conteudo: '', como_resgatar: '' });
   const [msg, setMsg] = useState(null);
 
   async function criar(e) {
@@ -21,7 +22,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
     if (!novo.titulo.trim()) { setMsg('Informe o titulo.'); return; }
     const { ok } = await chamar({ op: 'beneficio_criar', ...novo });
     if (!ok) { setMsg('Erro ao criar.'); return; }
-    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze', imagem_url: '', conteudo: '', como_resgatar: '' }); router.refresh();
+    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', imagem_url: '', conteudo: '', como_resgatar: '' }); router.refresh();
   }
 
   return (
@@ -32,6 +33,9 @@ export default function GestaoBeneficios({ beneficios = [] }) {
           <input value={novo.titulo} onChange={e => setNovo({ ...novo, titulo: e.target.value })} placeholder="Titulo (ex.: Convite para o desfile de fim de ano)" style={{ flex: 2, minWidth: 240 }} />
           <select value={novo.nivel_minimo} onChange={e => setNovo({ ...novo, nivel_minimo: e.target.value })} style={{ minWidth: 150 }}>
             {NIVEIS.map(([v, l]) => <option key={v} value={v}>A partir de {l}</option>)}
+          </select>
+          <select value={novo.periodicidade} onChange={e => setNovo({ ...novo, periodicidade: e.target.value })} style={{ minWidth: 130 }}>
+            {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
           <button type="submit">Adicionar</button>
         </div>
@@ -55,7 +59,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
 function Linha({ b, primeira }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false);
-  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo, imagem_url: b.imagem_url || '', conteudo: b.conteudo || '', como_resgatar: b.como_resgatar || '' });
+  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo, periodicidade: b.periodicidade || 'unico', imagem_url: b.imagem_url || '', conteudo: b.conteudo || '', como_resgatar: b.como_resgatar || '' });
 
   async function salvar() { const { ok } = await chamar({ op: 'beneficio_editar', id: b.id, ...f }); if (ok) { setEdit(false); router.refresh(); } }
   async function toggle() { await chamar({ op: 'beneficio_editar', id: b.id, ativo: !b.ativo }); router.refresh(); }
@@ -67,7 +71,7 @@ function Linha({ b, primeira }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span className={`badge ${b.nivel_minimo}`} style={{ flexShrink: 0 }}>{labelCategoria(b.nivel_minimo)}+</span>
           <div style={{ flex: 1 }}>
-            <b>{b.titulo}</b> {!b.ativo && <span className="chip">inativo</span>}
+            <b>{b.titulo}</b> <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span> {!b.ativo && <span className="chip">inativo</span>}
             {b.descricao && <span className="sub">{b.descricao}</span>}
           </div>
           <button type="button" className="btn-ghost" onClick={() => setEdit(true)}>Editar</button>
@@ -80,6 +84,9 @@ function Linha({ b, primeira }) {
             <input value={f.titulo} onChange={e => setF({ ...f, titulo: e.target.value })} placeholder="Titulo" style={{ flex: 2, minWidth: 220 }} />
             <select value={f.nivel_minimo} onChange={e => setF({ ...f, nivel_minimo: e.target.value })} style={{ minWidth: 150 }}>
               {['bronze', 'prata', 'ouro', 'platina'].map(v => <option key={v} value={v}>A partir de {labelCategoria(v)}</option>)}
+            </select>
+            <select value={f.periodicidade} onChange={e => setF({ ...f, periodicidade: e.target.value })} style={{ minWidth: 130 }}>
+              {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
             <button type="button" onClick={salvar}>Salvar</button>
             <button type="button" className="btn-ghost" onClick={() => setEdit(false)}>Cancelar</button>

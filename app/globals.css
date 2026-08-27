@@ -182,7 +182,8 @@ button:active{transform:translateY(1px)}
 /* ============ RESPONSIVO (tablet e mobile) ============ */
 /* curso: player + lista de aulas lado a lado no desktop */
 .curso-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
-html,body{max-width:100%;overflow-x:hidden}
+/* clip (nao hidden) evita rolagem horizontal SEM quebrar o position:sticky da sidebar */
+body{overflow-x:clip}
 
 /* TABLET (paisagem) */
 @media(max-width:1024px){

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { rankNivel, labelCategoria } from '@/lib/format';
+import { rankNivel, labelCategoria, labelPeriodicidade } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +27,8 @@ export default async function BeneficiosCliente() {
 
   const { data: todos } = await supabaseAdmin.from('clube_beneficios').select('*').eq('ativo', true).order('ordem');
   const ordenar = (x, y) => (rankNivel(x.nivel_minimo) - rankNivel(y.nivel_minimo)) || (x.ordem - y.ordem);
-  const liberados = (todos || []).filter(b => rankNivel(b.nivel_minimo) <= rankNivel(nivel)).sort(ordenar);
+  // cada nivel tem sua lista completa: mostra os do nivel atual do cliente
+  const liberados = (todos || []).filter(b => rankNivel(b.nivel_minimo) === rankNivel(nivel)).sort(ordenar);
   const bloqueados = (todos || []).filter(b => rankNivel(b.nivel_minimo) > rankNivel(nivel)).sort(ordenar);
 
   return (
@@ -46,7 +47,10 @@ export default async function BeneficiosCliente() {
           {liberados.map(b => (
             <a key={b.id} href={`/cliente/beneficios/${b.id}`} className="card" style={{ borderTop: '3px solid var(--brand-2,#c99a5b)', textDecoration: 'none', color: 'inherit', display: 'block' }}>
               {b.imagem_url && <img src={b.imagem_url} alt="" style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
-              <span className={`badge ${b.nivel_minimo}`} style={{ marginBottom: 8, display: 'inline-block' }}>{labelCategoria(b.nivel_minimo)}</span>
+              <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+                <span className={`badge ${b.nivel_minimo}`}>{labelCategoria(b.nivel_minimo)}</span>
+                <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
+              </div>
               <h2 style={{ margin: '4px 0' }}>{b.titulo}</h2>
               {b.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 0 }}>{b.descricao}</p>}
             </a>
