@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { rankNivel, labelCategoria, labelPeriodicidade } from '@/lib/format';
+import { rankNivel, labelCategoria, labelPeriodicidade, dataBR } from '@/lib/format';
+import { periodoAtual, labelPeriodoRef } from '@/lib/periodo';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,14 @@ export default async function BeneficiosCliente() {
     );
   }
 
-  const { data: todos } = await supabaseAdmin.from('clube_beneficios').select('*').eq('ativo', true).order('ordem');
+  const [{ data: todos }, { data: resgates }] = await Promise.all([
+    supabaseAdmin.from('clube_beneficios').select('*').eq('ativo', true).order('ordem'),
+    supabaseAdmin.from('clube_beneficio_resgates').select('beneficio_id, periodo_ref, dt_resgate').eq('cd_cliente', a.cd_cliente),
+  ]);
+  const rg = resgates || [];
+  const recebidoAtual = (b) => rg.some(r => r.beneficio_id === b.id && r.periodo_ref === periodoAtual(b.periodicidade));
+  const tituloDe = Object.fromEntries((todos || []).map(b => [b.id, b.titulo]));
+  const historico = [...rg].sort((x, y) => new Date(y.dt_resgate) - new Date(x.dt_resgate));
   const ordenar = (x, y) => (rankNivel(x.nivel_minimo) - rankNivel(y.nivel_minimo)) || (x.ordem - y.ordem);
   // cada nivel tem sua lista completa: mostra os do nivel atual do cliente
   const liberados = (todos || []).filter(b => rankNivel(b.nivel_minimo) === rankNivel(nivel)).sort(ordenar);
@@ -50,11 +58,34 @@ export default async function BeneficiosCliente() {
               <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
                 <span className={`badge ${b.nivel_minimo}`}>{labelCategoria(b.nivel_minimo)}</span>
                 <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
+                {recebidoAtual(b)
+                  ? <span className="chip ativa">✓ Recebido ({labelPeriodoRef(periodoAtual(b.periodicidade))})</span>
+                  : <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>Disponivel</span>}
               </div>
               <h2 style={{ margin: '4px 0' }}>{b.titulo}</h2>
               {b.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 0 }}>{b.descricao}</p>}
             </a>
           ))}
+        </div>
+      )}
+
+      {historico.length > 0 && (
+        <div className="card flush" style={{ marginTop: 8 }}>
+          <div className="card-pad"><h2 style={{ margin: 0 }}>Historico de resgates</h2></div>
+          <div style={{ overflowX: 'auto' }}>
+            <table>
+              <thead><tr><th>Beneficio</th><th>Periodo</th><th>Recebido em</th></tr></thead>
+              <tbody>
+                {historico.map((r, i) => (
+                  <tr key={i}>
+                    <td>{tituloDe[r.beneficio_id] || 'Beneficio'}</td>
+                    <td>{labelPeriodoRef(r.periodo_ref)}</td>
+                    <td className="muted num">{dataBR(r.dt_resgate)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
