@@ -1,18 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap');
 :root{
   /* paleta DEEP */
-  --bg:#f7f5f2; --card:#ffffff; --ink:#241d19; --ink-2:#4a413b; --muted:#8f847b; --line:#eae4dd;
+  --bg:#f6f3ef; --card:#ffffff; --ink:#241d19; --ink-2:#4a413b; --muted:#8f847b; --line:#ece6de;
   --brand:#6b4e3d; --brand-2:#a07b5b; --brand-deep:#241b16; --brand-deeper:#1a130f;
   --accent:#c8a882; --ok:#2e7d5b; --ok-bg:#e9f4ee; --bad:#b23b3b; --bad-bg:#fbecec; --warn:#b07b1e; --warn-bg:#fdf3e0;
   --bronze:#a97142; --prata:#8c9196; --ouro:#c9a227; --platina:#5b6b74; --semcat:#b7aea7;
-  --shadow-sm:0 1px 2px rgba(36,27,22,.05);
-  --shadow:0 1px 3px rgba(36,27,22,.06),0 6px 20px -8px rgba(36,27,22,.10);
-  --shadow-lg:0 8px 32px -8px rgba(36,27,22,.18);
-  --radius:14px;
-  --sidebar-w:236px;
+  --shadow-sm:0 1px 2px rgba(36,27,22,.04);
+  --shadow:0 1px 2px rgba(36,27,22,.05),0 10px 28px -14px rgba(36,27,22,.14);
+  --shadow-lg:0 14px 44px -14px rgba(36,27,22,.22);
+  --radius:16px;
+  --sidebar-w:244px;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  --ease:cubic-bezier(.4,0,.2,1);
 }
 *{box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+body{margin:0;font-family:var(--font-sans);background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.55;letter-spacing:-.005em}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--accent);color:#fff}
 
@@ -46,7 +50,7 @@ a{color:inherit;text-decoration:none}
 
 /* topo da pagina */
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
-.page-head h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0}
+.page-head h1{font-family:var(--font-display);font-size:27px;font-weight:600;letter-spacing:-.01em;margin:0}
 .page-head .sub{color:var(--muted);font-size:13px;margin-top:3px}
 
 /* ---------- Cards ---------- */
@@ -178,6 +182,36 @@ button:active{transform:translateY(1px)}
 .banner{display:flex;gap:12px;align-items:flex-start;border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;font-size:13.5px}
 .banner.warn{background:var(--warn-bg);border:1px solid #efd9ac;color:#7a5a1a}
 .banner b{font-weight:700}
+
+/* ============ POLIMENTO PROFISSIONAL ============ */
+/* cards clicaveis: leve elevacao no hover */
+a.card,.card.clickable{transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}
+a.card:hover,.card.clickable:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:#e0d6ca}
+.card{box-shadow:var(--shadow)}
+/* KPI mais elegante */
+.kpi-val{font-feature-settings:"tnum" 1;letter-spacing:-.02em}
+.kpi-card{border-radius:var(--radius)}
+/* numeros grandes com respiro */
+.num{font-feature-settings:"tnum" 1}
+/* foco acessivel visivel (teclado) */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+/* linhas de tabela e hover mais suave */
+tbody tr:hover{background:#faf6f1}
+th{color:#a89c90}
+/* botoes: transicao e leve profundidade */
+button{transition:background .18s var(--ease),transform .05s,box-shadow .18s var(--ease);box-shadow:0 1px 1px rgba(36,27,22,.04)}
+button:hover{box-shadow:0 4px 14px -6px rgba(107,78,61,.5)}
+/* chips e badges: leve refinamento */
+.badge{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+/* barra de progresso arredondada padrao */
+.card h2{color:#a2968a}
+/* transicao global suave em cores/bordas de elementos interativos */
+.nav-item,.btn-ghost,.pager a,.fchip,.tabs button{transition:all .18s var(--ease)}
+/* respeita quem prefere menos movimento */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  a.card:hover,.card.clickable:hover{transform:none}
+}
 
 /* ============ RESPONSIVO (tablet e mobile) ============ */
 /* curso: player + lista de aulas lado a lado no desktop */
