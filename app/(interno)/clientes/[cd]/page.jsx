@@ -1,8 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { carregarDados } from '@/lib/dados';
 import { rankNivel } from '@/lib/format';
-import FichaCliente from '@/components/FichaCliente';
-import BeneficiosClienteAdmin from '@/components/BeneficiosClienteAdmin';
+import FichaTabs from '@/components/FichaTabs';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,11 +10,8 @@ export default async function Ficha({ params }) {
   const { data: cliente } = await supabaseAdmin.from('clube_clientes').select('*').eq('cd_cliente', cd).maybeSingle();
   if (!cliente) return <div className="card">Cliente nao encontrado.</div>;
 
-  const [dados, { data: saldo }] = await Promise.all([
-    carregarDados(cd),
-    supabaseAdmin.from('clube_saldos').select('categoria_efetiva').eq('cd_cliente', cd).maybeSingle(),
-  ]);
-  const nivel = saldo?.categoria_efetiva || 'sem_categoria';
+  const dados = await carregarDados(cd);
+  const nivel = dados.saldo?.categoria_efetiva || 'sem_categoria';
 
   // beneficios do nivel do cliente + resgates para a marcacao
   let beneficios = [], resgates = [];
@@ -28,9 +24,17 @@ export default async function Ficha({ params }) {
   }
 
   return (
-    <>
-      <FichaCliente cliente={cliente} {...dados} voltar="/clientes" />
-      <BeneficiosClienteAdmin cdCliente={cd} nivel={nivel} beneficios={beneficios} resgatesIniciais={resgates} />
-    </>
+    <FichaTabs
+      cliente={cliente}
+      saldo={dados.saldo}
+      extrato={dados.extrato}
+      trajetoria={dados.trajetoria}
+      aexp={dados.aexp}
+      lojaUltima={dados.lojaUltima}
+      nivel={nivel}
+      beneficios={beneficios}
+      resgatesIniciais={resgates}
+      voltar="/clientes"
+    />
   );
 }
