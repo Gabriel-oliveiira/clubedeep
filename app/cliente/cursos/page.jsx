@@ -14,14 +14,14 @@ export default async function CursosCliente() {
   const { data: saldo } = await supabaseAdmin.from('clube_saldos').select('categoria_efetiva').eq('cd_cliente', a.cd_cliente).maybeSingle();
   const nivel = saldo?.categoria_efetiva || 'sem_categoria';
 
-  // Sem nivel = sem acesso a nenhum beneficio/curso
+  // Sem nível = sem acesso a nenhum curso
   if (rankNivel(nivel) < 1) {
     return (
       <>
-        <div className="page-head"><div><p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p><h1>Cursos e treinamentos</h1></div></div>
+        <div className="page-head"><div><p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Início</a></p><h1>Cursos e treinamentos</h1></div></div>
         <div className="card">
-          <h2>Acesso liberado a partir do nivel Bronze</h2>
-          <p className="muted">Assim que voce atingir o nivel <b>Bronze</b>, todos os cursos ficam liberados aqui. Continue comprando para desbloquear.</p>
+          <h2>Acesso liberado a partir do nível Bronze</h2>
+          <p className="muted">Assim que você atingir o nível <b>Bronze</b>, todos os cursos ficam liberados aqui. Continue comprando para desbloquear.</p>
         </div>
       </>
     );
@@ -30,6 +30,7 @@ export default async function CursosCliente() {
   const { data: cursos } = await supabaseAdmin
     .from('clube_cursos').select('*').eq('ativo', true).order('ordem').order('criado_em');
   const acessiveis = (cursos || []).filter(c => rankNivel(c.nivel_minimo) <= rankNivel(nivel));
+  const bloqueados = (cursos || []).filter(c => rankNivel(c.nivel_minimo) > rankNivel(nivel));
   const ids = acessiveis.map(c => c.id);
 
   let aulas = [], prog = [];
@@ -54,13 +55,13 @@ export default async function CursosCliente() {
     <>
       <div className="page-head">
         <div>
-          <p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p>
-          <h1>Cursos e treinamentos</h1><div className="sub">Seu nivel: {labelCategoria(nivel)}</div>
+          <p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Início</a></p>
+          <h1>Cursos e treinamentos</h1><div className="sub">Seu nível: {labelCategoria(nivel)}</div>
         </div>
       </div>
 
       {acessiveis.length === 0 ? (
-        <div className="card"><div className="empty">Nenhum curso disponivel ainda. Em breve!</div></div>
+        <div className="card"><div className="empty">Nenhum curso disponível ainda. Em breve!</div></div>
       ) : (
         <div className="grid cols-3">
           {acessiveis.map(c => {
@@ -82,6 +83,23 @@ export default async function CursosCliente() {
             );
           })}
         </div>
+      )}
+
+      {bloqueados.length > 0 && (
+        <>
+          <div className="page-head" style={{ marginTop: 24 }}><div><h2 style={{ margin: 0 }}>Desbloqueie nos próximos níveis</h2></div></div>
+          <div className="grid cols-3">
+            {bloqueados.map(c => (
+              <div key={c.id} className="card" style={{ opacity: .6 }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6 }}>
+                  <span className={`badge ${c.nivel_minimo}`}>{labelCategoria(c.nivel_minimo)}</span>
+                </div>
+                <h2 style={{ margin: '4px 0' }}>🔒 {c.titulo}</h2>
+                <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>Disponível ao atingir o nível {labelCategoria(c.nivel_minimo)}.</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

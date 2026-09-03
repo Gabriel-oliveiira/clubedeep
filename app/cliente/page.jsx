@@ -39,6 +39,8 @@ export default async function AreaCliente() {
   const pts = Number(saldo?.pontos_validos || 0);
   const prog = progresso(pts);
   const primeiroNome = (a.nome || cli?.nome || 'cliente').split(' ')[0];
+  const wpp = process.env.NEXT_PUBLIC_WHATSAPP_SUPORTE || '5585999999999';
+  const wppFoto = `https://wa.me/${wpp}?text=${encodeURIComponent('Ola! Quero enviar a foto para o meu kit Platina personalizado.')}`;
 
   // beneficios do proximo nivel (o que te espera)
   let proxBenef = [];
@@ -52,7 +54,7 @@ export default async function AreaCliente() {
     <>
       <div className="page-head">
         <div>
-          <h1>Ola, {primeiroNome}!</h1>
+          <h1>Olá, {primeiroNome}!</h1>
           <div className="sub">Bem-vindo ao seu Clube Deep.</div>
         </div>
         <span className={`badge ${nivel}`} style={{ fontSize: 13, padding: '6px 16px' }}>{labelCategoria(nivel)}</span>
@@ -65,7 +67,7 @@ export default async function AreaCliente() {
             <div className="kpi-lbl">Seu saldo de pontos</div>
             <div className="num" style={{ fontSize: 34, fontWeight: 700 }}>{pontos(pts)}</div>
           </div>
-          {saldo?.em_carencia && <span className="chip carencia">em carencia ate {dataBR(saldo?.carencia_ate)}</span>}
+          {saldo?.em_carencia && <span className="chip carencia">em carência até {dataBR(saldo?.carencia_ate)}</span>}
         </div>
 
         {prog.proximo ? (
@@ -82,7 +84,7 @@ export default async function AreaCliente() {
             </div>
           </div>
         ) : (
-          <div style={{ marginTop: 16 }} className="muted">Voce esta no nivel maximo. Parabens!</div>
+          <div style={{ marginTop: 16 }} className="muted">Você está no nível máximo. Parabéns!</div>
         )}
       </div>
 
@@ -102,19 +104,33 @@ export default async function AreaCliente() {
         </div>
       )}
 
-      {/* Espacos das proximas fases */}
+      {/* Kit Platina personalizado: pedir foto pelo WhatsApp */}
+      {nivel === 'platina' && (
+        <div className="card" style={{ borderLeft: '3px solid var(--platina,#5b6b74)' }}>
+          <h2>Seu kit Platina é personalizado</h2>
+          <p className="muted" style={{ fontSize: 14 }}>
+            O kit Platina inclui um item exclusivo feito com uma foto sua. Envie a foto pelo WhatsApp para montarmos o seu kit.
+          </p>
+          <a href={wppFoto} target="_blank" rel="noopener noreferrer"
+             style={{ display: 'inline-block', background: '#1da851', color: '#fff', padding: '10px 18px', borderRadius: 10, textDecoration: 'none', fontWeight: 600 }}>
+            Enviar foto pelo WhatsApp
+          </a>
+        </div>
+      )}
+
+      {/* Atalhos */}
       <div className="grid cols-2">
         <a href="/cliente/beneficios" className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-          <h2>Meus beneficios</h2>
+          <h2>Meus benefícios</h2>
           <p className="muted" style={{ fontSize: 14 }}>
-            Convites para eventos, brindes e vantagens exclusivas do seu nivel.
+            Convites para eventos, brindes e vantagens exclusivas do seu nível.
           </p>
-          <span className="chip" style={{ background: 'var(--brand,#6b4f2a)', color: '#fff' }}>Ver beneficios &rarr;</span>
+          <span className="chip" style={{ background: 'var(--brand,#6b4f2a)', color: '#fff' }}>Ver benefícios &rarr;</span>
         </a>
         <a href="/cliente/cursos" className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <h2>Cursos e treinamentos</h2>
           <p className="muted" style={{ fontSize: 14 }}>
-            Aulas de vendas e outros treinamentos para voce crescer com a DEEP.
+            Aulas de vendas e outros treinamentos para você crescer com a DEEP.
           </p>
           <span className="chip" style={{ background: 'var(--brand,#6b4f2a)', color: '#fff' }}>Acessar cursos &rarr;</span>
         </a>

@@ -18,10 +18,10 @@ export default async function BeneficiosCliente() {
   if (rankNivel(nivel) < 1) {
     return (
       <>
-        <div className="page-head"><div><p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p><h1>Meus beneficios</h1></div></div>
+        <div className="page-head"><div><p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Início</a></p><h1>Meus benefícios</h1></div></div>
         <div className="card">
-          <h2>Beneficios liberados a partir do Bronze</h2>
-          <p className="muted">Assim que voce atingir o nivel <b>Bronze</b>, seus beneficios aparecem aqui. Continue comprando para desbloquear.</p>
+          <h2>Benefícios liberados a partir do Bronze</h2>
+          <p className="muted">Assim que você atingir o nível <b>Bronze</b>, seus benefícios aparecem aqui. Continue comprando para desbloquear.</p>
         </div>
       </>
     );
@@ -47,15 +47,15 @@ export default async function BeneficiosCliente() {
     <>
       <div className="page-head">
         <div>
-          <p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Inicio</a></p>
-          <h1>Meus beneficios</h1><div className="sub">Seu nivel: {labelCategoria(nivel)}</div>
+          <p style={{ margin: '0 0 6px' }}><a className="muted" href="/cliente">&larr; Início</a></p>
+          <h1>Meus benefícios</h1><div className="sub">Seu nível: {labelCategoria(nivel)}</div>
         </div>
       </div>
 
       <VoucherMes nivel={nivel} voucherInicial={voucherAtual} historico={vouchers || []} />
 
       {liberados.length === 0 ? (
-        <div className="card"><div className="empty">Nenhum beneficio disponivel ainda. Em breve!</div></div>
+        <div className="card"><div className="empty">Nenhum benefício disponível ainda. Em breve!</div></div>
       ) : (
         <div className="grid cols-3">
           {liberados.map(b => (
@@ -66,7 +66,7 @@ export default async function BeneficiosCliente() {
                 <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
                 {recebidoAtual(b)
                   ? <span className="chip ativa">✓ Recebido ({labelPeriodoRef(periodoAtual(b.periodicidade))})</span>
-                  : <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>Disponivel</span>}
+                  : <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>Disponível</span>}
               </div>
               <h2 style={{ margin: '4px 0' }}>{b.titulo}</h2>
               {b.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 0 }}>{b.descricao}</p>}
@@ -77,14 +77,14 @@ export default async function BeneficiosCliente() {
 
       {historico.length > 0 && (
         <div className="card flush" style={{ marginTop: 8 }}>
-          <div className="card-pad"><h2 style={{ margin: 0 }}>Historico de resgates</h2></div>
+          <div className="card-pad"><h2 style={{ margin: 0 }}>Histórico de resgates</h2></div>
           <div style={{ overflowX: 'auto' }}>
             <table>
-              <thead><tr><th>Beneficio</th><th>Periodo</th><th>Recebido em</th></tr></thead>
+              <thead><tr><th>Benefício</th><th>Período</th><th>Recebido em</th></tr></thead>
               <tbody>
                 {historico.map((r, i) => (
                   <tr key={i}>
-                    <td>{tituloDe[r.beneficio_id] || 'Beneficio'}</td>
+                    <td>{tituloDe[r.beneficio_id] || 'Benefício'}</td>
                     <td>{labelPeriodoRef(r.periodo_ref)}</td>
                     <td className="muted num">{dataBR(r.dt_resgate)}</td>
                   </tr>
@@ -97,13 +97,13 @@ export default async function BeneficiosCliente() {
 
       {bloqueados.length > 0 && (
         <>
-          <div className="page-head" style={{ marginTop: 24 }}><div><h2 style={{ margin: 0 }}>Desbloqueie nos proximos niveis</h2></div></div>
+          <div className="page-head" style={{ marginTop: 24 }}><div><h2 style={{ margin: 0 }}>Desbloqueie nos próximos níveis</h2></div></div>
           <div className="grid cols-3">
             {bloqueados.map(b => (
               <div key={b.id} className="card" style={{ opacity: .6 }}>
                 <span className={`badge ${b.nivel_minimo}`} style={{ marginBottom: 8, display: 'inline-block' }}>{labelCategoria(b.nivel_minimo)}</span>
                 <h2 style={{ margin: '4px 0' }}>🔒 {b.titulo}</h2>
-                <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>Disponivel ao atingir {labelCategoria(b.nivel_minimo)}.</p>
+                <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>Disponível ao atingir {labelCategoria(b.nivel_minimo)}.</p>
               </div>
             ))}
           </div>
