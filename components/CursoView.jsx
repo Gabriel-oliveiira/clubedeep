@@ -5,7 +5,8 @@ import { thumbYoutube } from '@/lib/youtube';
 
 export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }) {
   const [concluidas, setConcluidas] = useState(new Set(concluidasIniciais));
-  const primeira = aulas.find(a => !concluidasIniciais.includes(a.id)) || aulas[0] || null;
+  const comLink = aulas.filter(a => a.youtube_id);
+  const primeira = comLink.find(a => !concluidasIniciais.includes(a.id)) || comLink[0] || aulas[0] || null;
   const [atual, setAtual] = useState(primeira);
 
   const pct = aulas.length ? Math.round((concluidas.size / aulas.length) * 100) : 0;
@@ -35,13 +36,20 @@ export default function CursoView({ curso, aulas = [], concluidasIniciais = [] }
   return (
     <div className="curso-grid">
       <div>
-        <PlayerAula key={atual.id} youtubeId={atual.youtube_id} onConcluir={() => marcar(atual.id, true)} />
+        {atual.youtube_id
+          ? <PlayerAula key={atual.id} youtubeId={atual.youtube_id} onConcluir={() => marcar(atual.id, true)} />
+          : <div style={{ background: '#0d0d0d', color: '#fff', textAlign: 'center', padding: '64px 20px', borderRadius: 14 }}>
+              <div style={{ fontSize: 15, fontWeight: 600 }}>Aula em breve</div>
+              <div style={{ color: '#bbb', fontSize: 13, marginTop: 6 }}>Este conteudo sera publicado em breve.</div>
+            </div>}
         <div className="card" style={{ marginTop: 14 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <h2 style={{ margin: 0 }}>{atual.titulo}</h2>
-            <button type="button" className={atualConcluida ? 'btn-ghost' : ''} onClick={() => marcar(atual.id, !atualConcluida)}>
-              {atualConcluida ? '✓ Concluida' : 'Marcar como concluida'}
-            </button>
+            {atual.youtube_id && (
+              <button type="button" className={atualConcluida ? 'btn-ghost' : ''} onClick={() => marcar(atual.id, !atualConcluida)}>
+                {atualConcluida ? '✓ Concluida' : 'Marcar como concluida'}
+              </button>
+            )}
           </div>
           {atual.descricao && <p className="muted" style={{ marginBottom: 0 }}>{atual.descricao}</p>}
         </div>

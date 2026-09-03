@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { carregarDados } from '@/lib/dados';
-import { pontos, labelCategoria, labelTipoCliente, dataBR } from '@/lib/format';
+import { pontos, labelCategoria, labelTipoCliente, labelEvento, dataBR, mascararCpf } from '@/lib/format';
 import { nomeLoja } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
@@ -43,7 +43,7 @@ export default async function ClienteFicha() {
         <h2>Meus dados</h2>
         <div className="grid cols-3">
           <div><small className="muted">Nome</small><div>{cliente?.nome || '-'}</div></div>
-          <div><small className="muted">CPF/CNPJ</small><div className="num">{cliente?.cpf_cnpj || '-'}</div></div>
+          <div><small className="muted">CPF/CNPJ</small><div className="num">{mascararCpf(cliente?.cpf_cnpj)}</div></div>
           <div><small className="muted">Categoria</small><div>{labelTipoCliente(cliente?.cat_cliente)}</div></div>
           <div><small className="muted">Cidade/UF</small><div>{[cliente?.cidade, cliente?.uf].filter(Boolean).join(' / ') || '-'}</div></div>
           <div><small className="muted">Telefone</small><div className="num">{cliente?.telefone || '-'}</div></div>
@@ -51,6 +51,27 @@ export default async function ClienteFicha() {
           <div><small className="muted">Ultima compra</small><div>{dataBR(cliente?.dt_ultima_compra)}</div></div>
           <div><small className="muted">Loja da ultima compra</small><div>{dados.lojaUltima || '-'}</div></div>
           <div><small className="muted">Loja de cadastro</small><div>{nomeLoja(cliente?.empresa)}</div></div>
+        </div>
+      </div>
+
+      <div className="card flush">
+        <div className="card-pad"><h2 style={{ margin: 0 }}>Minha trajetoria</h2></div>
+        <div style={{ overflowX: 'auto' }}>
+          <table>
+            <thead><tr><th>Quando</th><th>Evento</th><th>De</th><th>Para</th><th style={{ textAlign: 'right' }}>Pontos</th></tr></thead>
+            <tbody>
+              {(dados.trajetoria || []).map((h, i) => (
+                <tr key={i}>
+                  <td className="num">{dataBR(h.criado_em)}</td>
+                  <td>{labelEvento(h.evento)}</td>
+                  <td>{h.categoria_anterior ? <span className={`badge ${h.categoria_anterior}`}>{labelCategoria(h.categoria_anterior)}</span> : '-'}</td>
+                  <td><span className={`badge ${h.categoria_nova}`}>{labelCategoria(h.categoria_nova)}</span></td>
+                  <td style={{ textAlign: 'right' }} className="num">{pontos(h.pontos_no_momento)}</td>
+                </tr>
+              ))}
+              {(dados.trajetoria || []).length === 0 && <tr><td colSpan={5}><div className="empty">Sem mudancas de nivel registradas ainda.</div></td></tr>}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

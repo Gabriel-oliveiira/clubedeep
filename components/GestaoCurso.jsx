@@ -100,10 +100,12 @@ function AulaLinha({ aula, indice, primeira }) {
       {!edit ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span className="muted num" style={{ width: 18 }}>{indice + 1}</span>
-          <img src={thumbYoutube(aula.youtube_id, 'mqdefault')} alt="" style={{ width: 72, height: 40, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+          {aula.youtube_id
+            ? <img src={thumbYoutube(aula.youtube_id, 'mqdefault')} alt="" style={{ width: 72, height: 40, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+            : <div style={{ width: 72, height: 40, borderRadius: 6, flexShrink: 0, background: '#f0eae2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--muted)', textAlign: 'center' }}>sem link</div>}
           <div style={{ flex: 1 }}>
-            <b>{aula.titulo}</b> {!aula.ativo && <span className="chip">inativa</span>}
-            <span className="sub num">YouTube: {aula.youtube_id}</span>
+            <b>{aula.titulo}</b> {!aula.ativo && <span className="chip">inativa</span>} {!aula.youtube_id && <span className="chip" style={{ background: 'var(--warn-bg,#fdf3e0)', color: 'var(--warn,#b07b1e)' }}>sem link</span>}
+            <span className="sub num">{aula.youtube_id ? `YouTube: ${aula.youtube_id}` : 'Adicione o link do YouTube em Editar'}</span>
           </div>
           <button type="button" className="btn-ghost" onClick={() => setEdit(true)}>Editar</button>
           <button type="button" className="btn-ghost" onClick={toggle}>{aula.ativo ? 'Desativar' : 'Ativar'}</button>

@@ -48,6 +48,11 @@ export const IcSearch = (p) => (
     <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
   </svg>
 );
+export const IcInfo = (p) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}>
+    <circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+);
 export const IcCursos = (p) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}>
     <path d="M2 6a2 2 0 0 1 2-2h5a3 3 0 0 1 3 3 3 3 0 0 1 3-3h5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4a2 2 0 0 1-2-2z"/>

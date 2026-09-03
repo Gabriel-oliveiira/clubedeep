@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { pontos, labelCategoria, dataBR } from '@/lib/format';
+import { pontos, brl, labelCategoria, dataBR } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +40,14 @@ export default async function AreaCliente() {
   const prog = progresso(pts);
   const primeiroNome = (a.nome || cli?.nome || 'cliente').split(' ')[0];
 
+  // beneficios do proximo nivel (o que te espera)
+  let proxBenef = [];
+  if (prog.proximo) {
+    const { data } = await supabaseAdmin.from('clube_beneficios')
+      .select('titulo, descricao').eq('nivel_minimo', prog.proximo).eq('ativo', true).order('ordem').limit(4);
+    proxBenef = data || [];
+  }
+
   return (
     <>
       <div className="page-head">
@@ -69,11 +77,30 @@ export default async function AreaCliente() {
             <div style={{ height: 12, background: '#efe9e1', borderRadius: 999, overflow: 'hidden' }}>
               <div style={{ width: `${prog.pct}%`, height: '100%', background: 'var(--brand-2, #c99a5b)', borderRadius: 999 }} />
             </div>
+            <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+              O equivalente a <b>{brl(prog.falta)}</b> em compras. Cada R$ 1,00 comprado = 1 ponto.
+            </div>
           </div>
         ) : (
           <div style={{ marginTop: 16 }} className="muted">Voce esta no nivel maximo. Parabens!</div>
         )}
       </div>
+
+      {/* O que te espera no proximo nivel */}
+      {prog.proximo && proxBenef.length > 0 && (
+        <div className="card" style={{ borderTop: '3px solid var(--brand-2,#c99a5b)' }}>
+          <h2>O que te espera no {labelCategoria(prog.proximo)}</h2>
+          <div className="grid cols-2" style={{ gap: 10 }}>
+            {proxBenef.map((b, i) => (
+              <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--brand-2,#c99a5b)', marginTop: 2 }}>&#10003;</span>
+                <div><b style={{ fontSize: 13.5 }}>{b.titulo}</b>{b.descricao && <div className="muted" style={{ fontSize: 12.5 }}>{b.descricao}</div>}</div>
+              </div>
+            ))}
+          </div>
+          <a href="/cliente/beneficios" className="chip" style={{ background: 'var(--brand,#6b4f2a)', color: '#fff', marginTop: 14, textDecoration: 'none' }}>Ver todos os beneficios &rarr;</a>
+        </div>
+      )}
 
       {/* Espacos das proximas fases */}
       <div className="grid cols-2">

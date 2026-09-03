@@ -3,6 +3,7 @@ import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import SidebarCliente from '@/components/SidebarCliente';
 import ContaBloqueada from '@/components/ContaBloqueada';
+import BotaoSuporte from '@/components/BotaoSuporte';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,7 @@ export default async function ClienteLayout({ children }) {
       <div className="main">
         <div className="content">{children}</div>
       </div>
+      <BotaoSuporte />
     </div>
   );
 }

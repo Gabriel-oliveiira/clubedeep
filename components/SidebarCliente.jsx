@@ -2,15 +2,15 @@
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase/client';
-import { IcDashboard, IcUsers, IcClock, IcTrend, IcCursos, IcStar, IcLogout } from '@/components/Icons';
+import { IcDashboard, IcUsers, IcClock, IcCursos, IcStar, IcInfo, IcLogout } from '@/components/Icons';
 
 const NAV = [
   { href: '/cliente', label: 'Inicio', Icon: IcDashboard },
   { href: '/cliente/ficha', label: 'Minha ficha', Icon: IcUsers },
   { href: '/cliente/extrato', label: 'Extrato de pontos', Icon: IcClock },
-  { href: '/cliente/trajetoria', label: 'Trajetoria', Icon: IcTrend },
   { href: '/cliente/beneficios', label: 'Beneficios', Icon: IcStar },
   { href: '/cliente/cursos', label: 'Cursos', Icon: IcCursos },
+  { href: '/cliente/como-funciona', label: 'Como funciona', Icon: IcInfo },
 ];
 
 export default function SidebarCliente({ nome, email }) {
