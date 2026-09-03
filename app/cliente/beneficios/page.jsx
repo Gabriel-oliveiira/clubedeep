@@ -3,6 +3,7 @@ import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { rankNivel, labelCategoria, labelPeriodicidade, dataBR } from '@/lib/format';
 import { periodoAtual, labelPeriodoRef } from '@/lib/periodo';
+import VoucherMes from '@/components/VoucherMes';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,10 +27,13 @@ export default async function BeneficiosCliente() {
     );
   }
 
-  const [{ data: todos }, { data: resgates }] = await Promise.all([
+  const [{ data: todos }, { data: resgates }, { data: vouchers }] = await Promise.all([
     supabaseAdmin.from('clube_beneficios').select('*').eq('ativo', true).order('ordem'),
     supabaseAdmin.from('clube_beneficio_resgates').select('beneficio_id, periodo_ref, dt_resgate').eq('cd_cliente', a.cd_cliente),
+    supabaseAdmin.from('clube_vouchers').select('*').eq('cd_cliente', a.cd_cliente).order('dt_gerado', { ascending: false }),
   ]);
+  const periodoMes = periodoAtual('mensal');
+  const voucherAtual = (vouchers || []).find(v => v.periodo_ref === periodoMes && v.voucher_code) || null;
   const rg = resgates || [];
   const recebidoAtual = (b) => rg.some(r => r.beneficio_id === b.id && r.periodo_ref === periodoAtual(b.periodicidade));
   const tituloDe = Object.fromEntries((todos || []).map(b => [b.id, b.titulo]));
@@ -47,6 +51,8 @@ export default async function BeneficiosCliente() {
           <h1>Meus beneficios</h1><div className="sub">Seu nivel: {labelCategoria(nivel)}</div>
         </div>
       </div>
+
+      <VoucherMes nivel={nivel} voucherInicial={voucherAtual} historico={vouchers || []} />
 
       {liberados.length === 0 ? (
         <div className="card"><div className="empty">Nenhum beneficio disponivel ainda. Em breve!</div></div>
