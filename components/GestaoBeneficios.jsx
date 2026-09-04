@@ -29,24 +29,32 @@ export default function GestaoBeneficios({ beneficios = [] }) {
   return (
     <>
       <form onSubmit={criar} className="card">
-        <h2 style={{ marginTop: 0 }}>Novo beneficio</h2>
-        <div className="toolbar" style={{ flexWrap: 'wrap' }}>
-          <input value={novo.titulo} onChange={e => setNovo({ ...novo, titulo: e.target.value })} placeholder="Titulo (ex.: Convite para o desfile de fim de ano)" style={{ flex: 2, minWidth: 240 }} />
-          <select value={novo.nivel_minimo} onChange={e => setNovo({ ...novo, nivel_minimo: e.target.value })} style={{ minWidth: 150 }}>
-            {NIVEIS.map(([v, l]) => <option key={v} value={v}>A partir de {l}</option>)}
-          </select>
-          <select value={novo.periodicidade} onChange={e => setNovo({ ...novo, periodicidade: e.target.value })} style={{ minWidth: 130 }}>
-            {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-          <select value={novo.forma_entrega} onChange={e => setNovo({ ...novo, forma_entrega: e.target.value })} style={{ minWidth: 180 }} title="Forma de entrega">
-            {FORMAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-          <button type="submit">Adicionar</button>
+        <div className="card-head"><div className="h">Novo benefício</div></div>
+        <div className="form-grid">
+          <div className="field full"><label>Título</label>
+            <input value={novo.titulo} onChange={e => setNovo({ ...novo, titulo: e.target.value })} placeholder="Ex.: Convite para o desfile de fim de ano" /></div>
+          <div className="field"><label>Nível mínimo</label>
+            <select value={novo.nivel_minimo} onChange={e => setNovo({ ...novo, nivel_minimo: e.target.value })}>
+              {NIVEIS.map(([v, l]) => <option key={v} value={v}>A partir de {l}</option>)}
+            </select></div>
+          <div className="field"><label>Periodicidade</label>
+            <select value={novo.periodicidade} onChange={e => setNovo({ ...novo, periodicidade: e.target.value })}>
+              {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select></div>
+          <div className="field"><label>Forma de entrega</label>
+            <select value={novo.forma_entrega} onChange={e => setNovo({ ...novo, forma_entrega: e.target.value })}>
+              {FORMAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select></div>
+          <div className="field"><label>Imagem <span className="hint">(URL, opcional)</span></label>
+            <input value={novo.imagem_url} onChange={e => setNovo({ ...novo, imagem_url: e.target.value })} placeholder="https://..." /></div>
+          <div className="field full"><label>Descrição curta <span className="hint">(aparece no card)</span></label>
+            <input value={novo.descricao} onChange={e => setNovo({ ...novo, descricao: e.target.value })} placeholder="Resumo do benefício" /></div>
+          <div className="field full"><label>Conteúdo completo <span className="hint">(texto que o cliente lê na página)</span></label>
+            <textarea value={novo.conteudo} onChange={e => setNovo({ ...novo, conteudo: e.target.value })} rows={4} /></div>
+          <div className="field full"><label>Como resgatar <span className="hint">(opcional)</span></label>
+            <textarea value={novo.como_resgatar} onChange={e => setNovo({ ...novo, como_resgatar: e.target.value })} rows={2} /></div>
         </div>
-        <input value={novo.descricao} onChange={e => setNovo({ ...novo, descricao: e.target.value })} placeholder="Descricao curta (aparece no card)" style={{ width: '100%', marginTop: 10 }} />
-        <input value={novo.imagem_url} onChange={e => setNovo({ ...novo, imagem_url: e.target.value })} placeholder="URL da imagem (opcional)" style={{ width: '100%', marginTop: 8 }} />
-        <textarea value={novo.conteudo} onChange={e => setNovo({ ...novo, conteudo: e.target.value })} placeholder="Conteudo completo da pagina do beneficio (texto que o cliente le)" rows={4} style={{ width: '100%', marginTop: 8 }} />
-        <textarea value={novo.como_resgatar} onChange={e => setNovo({ ...novo, como_resgatar: e.target.value })} placeholder="Como resgatar / instrucoes (opcional)" rows={2} style={{ width: '100%', marginTop: 8 }} />
+        <div className="actions"><button type="submit">Adicionar benefício</button></div>
         {msg && <div className="msg err" style={{ marginTop: 10 }}>{msg}</div>}
       </form>
 

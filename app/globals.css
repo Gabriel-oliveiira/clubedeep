@@ -57,7 +57,13 @@ a{color:inherit;text-decoration:none}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
 .card.flush{padding:0;overflow:hidden}
 .card.flush .card-pad{padding:18px 22px}
-.card h2{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+.card h2{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.01em;text-transform:none;color:var(--ink);margin:0 0 14px}
+/* cabecalho estruturado de card: titulo + descricao + acao */
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.card-head .h{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:0}
+.card-head .d{color:var(--muted);font-size:12.5px;margin-top:2px}
+/* etiqueta discreta (quando precisar do rotulo em maiusculas) */
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
 .grid{display:grid;gap:16px}
 .grid.cols-4{grid-template-columns:repeat(4,1fr)}
 .grid.cols-3{grid-template-columns:repeat(3,1fr)}
@@ -100,14 +106,24 @@ td .sub{display:block;font-size:11.5px;color:var(--muted)}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- Forms ---------- */
-input,select,button{font-size:13.5px;padding:10px 13px;border-radius:9px;border:1px solid var(--line);font-family:inherit;background:#fff;color:var(--ink)}
-input:focus,select:focus{outline:none;border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(160,123,91,.13)}
-button{background:var(--brand);color:#fff;border:none;cursor:pointer;font-weight:600;transition:background .15s,transform .05s}
+input,select,textarea{font-size:14px;height:42px;padding:0 13px;border-radius:11px;border:1px solid #ddd3c8;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.field input,.field select,.field textarea,.form-grid input,.form-grid select,.form-grid textarea{width:100%}
+textarea{height:auto;min-height:84px;padding:11px 13px;resize:vertical;line-height:1.5}
+input::placeholder,textarea::placeholder{color:#b7ada3}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(160,123,91,.15)}
+button{font-size:14px;height:42px;padding:0 20px;border-radius:11px;border:none;background:var(--brand);color:#fff;cursor:pointer;font-weight:600;font-family:inherit;transition:background .18s var(--ease),transform .05s}
 button:hover{background:#5a4132}
 button:active{transform:translateY(1px)}
-.btn-ghost{background:transparent;color:var(--brand);border:1px solid #d9cec2;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost{background:#fff;color:var(--brand);border:1px solid #ddd3c8;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn-ghost:hover{background:#f4ede5;border-color:var(--brand-2)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+/* formulario em grade: campos alinhados em colunas */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.form-grid .field{margin:0}
+.field.full{grid-column:1 / -1}
+.field .hint{font-size:11.5px;color:var(--muted);font-weight:400}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 
 /* ---------- Graficos ---------- */
 .chart-wrap{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
@@ -203,8 +219,7 @@ button{transition:background .18s var(--ease),transform .05s,box-shadow .18s var
 button:hover{box-shadow:0 4px 14px -6px rgba(107,78,61,.5)}
 /* chips e badges: leve refinamento */
 .badge{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
-/* barra de progresso arredondada padrao */
-.card h2{color:#a2968a}
+/* (titulo de card agora usa cor forte e fonte display — ver bloco Cards) */
 /* transicao global suave em cores/bordas de elementos interativos */
 .nav-item,.btn-ghost,.pager a,.fchip,.tabs button{transition:all .18s var(--ease)}
 /* abas da ficha: topo (desktop) x barra inferior com icones (mobile) */

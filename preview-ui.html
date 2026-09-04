@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clube DEEP — nova UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ef;--card:#fff;--ink:#241d19;--ink-2:#4a413b;--muted:#8f847b;--line:#ece6de;--line-2:#f2ede6;
+  --brand:#6b4e3d;--brand-2:#a07b5b;--brand-deep:#241b16;--accent:#c8a882;
+  --ok:#2e7d5b;--ok-bg:#e9f4ee;--bad:#b23b3b;--warn:#b07b1e;
+  --bronze:#a97142;--prata:#8c9196;--ouro:#c9a227;--platina:#5b6b74;
+  --radius:16px;--radius-sm:11px;
+  --shadow-sm:0 1px 2px rgba(36,27,22,.05);
+  --shadow:0 1px 2px rgba(36,27,22,.05),0 12px 30px -16px rgba(36,27,22,.16);
+  --font-sans:'Inter',system-ui,sans-serif;--font-display:'Fraunces',Georgia,serif;--ease:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:14.5px;line-height:1.55;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:34px 26px 60px}
+h1.top{font-family:var(--font-display);font-weight:600;font-size:26px;margin:0 0 4px}
+.top-sub{color:var(--muted);font-size:13px;margin-bottom:28px}
+.tag{display:inline-block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-2);font-weight:700;background:#f4ede5;padding:4px 9px;border-radius:6px;margin:26px 0 12px}
+
+/* ---- CARD ---- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.card-head .h{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:0}
+.card-head .d{color:var(--muted);font-size:12.5px;margin-top:2px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+
+/* ---- GRID ---- */
+.grid{display:grid;gap:16px}.cols-2{grid-template-columns:1fr 1fr}.cols-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.cols-4{grid-template-columns:1fr 1fr}.cols-2{grid-template-columns:1fr}}
+
+/* ---- KPI ---- */
+.kpi{display:flex;flex-direction:column;gap:14px;padding:20px}
+.kpi-top{display:flex;align-items:center;justify-content:space-between}
+.kpi-ico{width:38px;height:38px;border-radius:11px;background:#f4ede5;color:var(--brand);display:flex;align-items:center;justify-content:center}
+.kpi-ico svg{width:19px;height:19px}
+.kpi-val{font-size:29px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-lbl{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:5px}
+.kpi.gold .kpi-ico{background:#f8f1df;color:var(--ouro)}
+.kpi.ok .kpi-ico{background:var(--ok-bg);color:var(--ok)}
+.trend{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:6px}
+.trend.up{background:var(--ok-bg);color:var(--ok)}
+
+/* ---- FORM (o ponto fraco de hoje) ---- */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1 / -1}
+.field label{font-size:12px;font-weight:600;color:var(--ink-2)}
+.field .hint{font-size:11.5px;color:var(--muted)}
+input,select,textarea{width:100%;font-size:14px;padding:0 13px;height:42px;border-radius:var(--radius-sm);border:1px solid #ddd3c8;background:#fff;color:var(--ink);font-family:inherit;transition:border-color .15s,box-shadow .15s}
+textarea{height:auto;padding:11px 13px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#b7ada3}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(160,123,91,.15)}
+.actions{display:flex;gap:10px;margin-top:18px}
+button{font-family:inherit;font-size:14px;font-weight:600;height:42px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--brand);color:#fff;cursor:pointer;transition:background .18s var(--ease),box-shadow .18s var(--ease)}
+button:hover{background:#5a4132;box-shadow:0 6px 16px -8px rgba(107,78,61,.6)}
+.btn-ghost{background:#fff;color:var(--brand);border:1px solid #ddd3c8}
+.btn-ghost:hover{background:#f4ede5;box-shadow:none}
+
+/* ---- TABLE ---- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line-2)}
+th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#faf6f1}
+.flush{padding:0;overflow:hidden}.flush .card-pad{padding:18px 22px 6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---- BADGES / CHIPS ---- */
+.badge{display:inline-flex;padding:3px 11px;border-radius:999px;font-size:11px;font-weight:600;color:#fff}
+.badge.bronze{background:var(--bronze)}.badge.prata{background:var(--prata)}.badge.ouro{background:var(--ouro)}.badge.platina{background:var(--platina)}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:#f4ede5;color:var(--brand)}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.muted{color:var(--muted)}
+.progress{height:10px;border-radius:999px;background:#efe7dd;overflow:hidden;margin-top:4px}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--brand-2),var(--accent));border-radius:999px}
+</style></head>
+<body><div class="wrap">
+<h1 class="top">Nova linguagem visual — Clube DEEP</h1>
+<div class="top-sub">Mesma marca (marrom/dourado), com hierarquia, cards e campos refinados.</div>
+
+<div class="tag">Cards de indicador (KPI)</div>
+<div class="grid cols-4">
+  <div class="card kpi"><div class="kpi-top"><div class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div><span class="trend up">+8%</span></div><div><div class="kpi-val">2.695</div><div class="kpi-lbl">Clientes ativos</div></div></div>
+  <div class="card kpi gold"><div class="kpi-top"><div class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7 7 .5-5.5 4.5L18 21l-6-4-6 4 1.5-7L2 9.5 9 9z"/></svg></div></div><div><div class="kpi-val">72</div><div class="kpi-lbl">Prata ou acima</div></div></div>
+  <div class="card kpi ok"><div class="kpi-top"><div class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div></div><div><div class="kpi-val">R$ 6,7M</div><div class="kpi-lbl">Faturamento 180d</div></div></div>
+  <div class="card kpi"><div class="kpi-top"><div class="kpi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div></div><div><div class="kpi-val">9</div><div class="kpi-lbl">Platina</div></div></div>
+</div>
+
+<div class="tag">Card de conteúdo — título de verdade (antes virava etiqueta cinza)</div>
+<div class="grid cols-2">
+  <div class="card">
+    <div class="card-head"><div><div class="h">Seu kit Platina é personalizado</div><div class="d">Um item exclusivo feito com uma foto sua.</div></div><span class="badge platina">Platina</span></div>
+    <p class="muted" style="margin:0 0 16px;font-size:13.5px">Envie a foto pelo WhatsApp para montarmos o seu kit.</p>
+    <button>Enviar foto pelo WhatsApp</button>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><div class="h">Faltam 4.328 pts para Prata</div><div class="d">O equivalente a R$ 4.328 em compras.</div></div><span class="chip">Bronze</span></div>
+    <div class="progress" style="height:12px"><div style="width:64%"></div></div>
+    <div class="muted" style="font-size:12px;margin-top:10px">Cada R$ 1,00 comprado = 1 ponto.</div>
+  </div>
+</div>
+
+<div class="tag">Formulário — campos alinhados em grade (antes quebravam soltos)</div>
+<div class="card">
+  <div class="card-head"><div class="h">Novo benefício</div></div>
+  <div class="form-grid">
+    <div class="field full"><label>Título</label><input placeholder="Ex.: Convite para o desfile de fim de ano"></div>
+    <div class="field"><label>Nível mínimo</label><select><option>A partir de Bronze</option></select></div>
+    <div class="field"><label>Periodicidade</label><select><option>Único</option></select></div>
+    <div class="field"><label>Forma de entrega</label><select><option>Entregue pela equipe</option></select></div>
+    <div class="field"><label>Pontos / valor</label><input type="number" placeholder="0"></div>
+    <div class="field full"><label>Descrição curta <span class="hint">(aparece no card)</span></label><input placeholder="Resumo do benefício"></div>
+    <div class="field full"><label>Conteúdo completo</label><textarea rows="3" placeholder="Texto que o cliente lê na página do benefício"></textarea></div>
+  </div>
+  <div class="actions"><button>Adicionar benefício</button><button class="btn-ghost">Cancelar</button></div>
+</div>
+
+<div class="tag">Tabela</div>
+<div class="card flush">
+  <div class="card-pad"><div class="h" style="font-family:var(--font-display);font-size:17px;font-weight:600">Clientes</div></div>
+  <table><thead><tr><th>Cliente</th><th>Nível</th><th>Pontos</th><th>Última compra</th></tr></thead>
+  <tbody>
+    <tr><td><b>0981</b> — Kariny da Silva<span class="muted" style="display:block;font-size:11.5px">Revendedor</span></td><td><span class="badge ouro">Ouro</span></td><td class="num">60.675</td><td class="num muted">28/08/2026</td></tr>
+    <tr><td><b>0230</b> — Claudia Cristina<span class="muted" style="display:block;font-size:11.5px">Revendedor</span></td><td><span class="badge prata">Prata</span></td><td class="num">45.834</td><td class="num muted">30/08/2026</td></tr>
+    <tr><td><b>20614</b> — R C Lima<span class="muted" style="display:block;font-size:11.5px">Lojista</span></td><td><span class="badge platina">Platina</span></td><td class="num">140.554</td><td class="num muted">02/09/2026</td></tr>
+  </tbody></table>
+</div>
+
+</div></body></html>
