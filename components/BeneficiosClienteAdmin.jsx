@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { labelPeriodicidade, labelCategoria, dataBR } from '@/lib/format';
+import { labelPeriodicidade, labelFormaEntrega, labelCategoria, dataBR } from '@/lib/format';
 import { periodoAtual, labelPeriodoRef } from '@/lib/periodo';
 
 export default function BeneficiosClienteAdmin({ cdCliente, nivel, beneficios = [], resgatesIniciais = [] }) {
@@ -45,13 +45,18 @@ export default function BeneficiosClienteAdmin({ cdCliente, nivel, beneficios = 
       ) : beneficios.map((b, i) => {
         const per = periodoAtual(b.periodicidade);
         const ok = temResgate(b.id, per);
+        const forma = b.forma_entrega || 'equipe';
         return (
           <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', padding: '12px 16px', borderTop: i ? '1px solid var(--linha,#f0eae2)' : 0 }}>
             <div style={{ flex: 1, minWidth: 200 }}>
-              <b>{b.titulo}</b> <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
-              <span className="sub">Periodo atual: {labelPeriodoRef(per)}{ok ? ' · entregue' : ' · pendente'}</span>
+              <b>{b.titulo}</b> <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span> <span className="chip" style={{ background: '#eef2f6', color: '#3a5673' }}>{labelFormaEntrega(forma)}</span>
+              {forma === 'equipe' && <span className="sub">Periodo atual: {labelPeriodoRef(per)}{ok ? ' · entregue' : ' · pendente'}</span>}
             </div>
-            {ok ? (
+            {forma !== 'equipe' ? (
+              <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>
+                {forma === 'automatico' ? 'Automático — não requer baixa' : 'Resgate pela cliente'}
+              </span>
+            ) : ok ? (
               <>
                 <span className="chip ativa">✓ Entregue</span>
                 <button type="button" className="btn-ghost" disabled={busy === b.id} onClick={() => desfazer(b)}>Desfazer</button>

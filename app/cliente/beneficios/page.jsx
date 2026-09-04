@@ -64,11 +64,13 @@ export default async function BeneficiosCliente() {
               <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
                 <span className={`badge ${b.nivel_minimo}`}>{labelCategoria(b.nivel_minimo)}</span>
                 <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
-                {b.periodicidade === 'automatico'
-                  ? <span className="chip ativa">✓ Creditado automaticamente</span>
-                  : recebidoAtual(b)
-                    ? <span className="chip ativa">✓ Recebido ({labelPeriodoRef(periodoAtual(b.periodicidade))})</span>
-                    : <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>Disponível</span>}
+                {b.forma_entrega === 'automatico'
+                  ? <span className="chip ativa">✓ Liberado automaticamente</span>
+                  : b.forma_entrega === 'resgate_cliente'
+                    ? <span className="chip" style={{ background: '#eef2f6', color: '#3a5673' }}>Resgate pela cliente</span>
+                    : recebidoAtual(b)
+                      ? <span className="chip ativa">✓ Recebido ({labelPeriodoRef(periodoAtual(b.periodicidade))})</span>
+                      : <span className="chip" style={{ background: '#f4ede5', color: 'var(--muted)' }}>A receber</span>}
               </div>
               <h2 style={{ margin: '4px 0' }}>{b.titulo}</h2>
               {b.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 0 }}>{b.descricao}</p>}

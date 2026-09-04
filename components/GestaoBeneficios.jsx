@@ -1,10 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { labelCategoria, labelPeriodicidade } from '@/lib/format';
+import { labelCategoria, labelPeriodicidade, labelFormaEntrega } from '@/lib/format';
 
 const NIVEIS = [['bronze', 'Bronze'], ['prata', 'Prata'], ['ouro', 'Ouro'], ['platina', 'Platina']];
-const PERIODOS = [['automatico', 'Automático'], ['unico', 'Único'], ['mensal', 'Mensal'], ['anual', 'Anual']];
+const PERIODOS = [['unico', 'Único'], ['mensal', 'Mensal'], ['anual', 'Anual']];
+const FORMAS = [['equipe', 'Entregue pela equipe'], ['resgate_cliente', 'Resgate pela cliente'], ['automatico', 'Automático']];
 
 async function chamar(body) {
   const r = await fetch('/api/beneficios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -14,7 +15,7 @@ async function chamar(body) {
 
 export default function GestaoBeneficios({ beneficios = [] }) {
   const router = useRouter();
-  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', imagem_url: '', conteudo: '', como_resgatar: '' });
+  const [novo, setNovo] = useState({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', forma_entrega: 'equipe', imagem_url: '', conteudo: '', como_resgatar: '' });
   const [msg, setMsg] = useState(null);
 
   async function criar(e) {
@@ -22,7 +23,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
     if (!novo.titulo.trim()) { setMsg('Informe o titulo.'); return; }
     const { ok } = await chamar({ op: 'beneficio_criar', ...novo });
     if (!ok) { setMsg('Erro ao criar.'); return; }
-    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', imagem_url: '', conteudo: '', como_resgatar: '' }); router.refresh();
+    setNovo({ titulo: '', descricao: '', nivel_minimo: 'bronze', periodicidade: 'unico', forma_entrega: 'equipe', imagem_url: '', conteudo: '', como_resgatar: '' }); router.refresh();
   }
 
   return (
@@ -36,6 +37,9 @@ export default function GestaoBeneficios({ beneficios = [] }) {
           </select>
           <select value={novo.periodicidade} onChange={e => setNovo({ ...novo, periodicidade: e.target.value })} style={{ minWidth: 130 }}>
             {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+          <select value={novo.forma_entrega} onChange={e => setNovo({ ...novo, forma_entrega: e.target.value })} style={{ minWidth: 180 }} title="Forma de entrega">
+            {FORMAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
           <button type="submit">Adicionar</button>
         </div>
@@ -59,7 +63,7 @@ export default function GestaoBeneficios({ beneficios = [] }) {
 function Linha({ b, primeira }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false);
-  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo, periodicidade: b.periodicidade || 'unico', imagem_url: b.imagem_url || '', conteudo: b.conteudo || '', como_resgatar: b.como_resgatar || '' });
+  const [f, setF] = useState({ titulo: b.titulo, descricao: b.descricao || '', nivel_minimo: b.nivel_minimo, periodicidade: b.periodicidade || 'unico', forma_entrega: b.forma_entrega || 'equipe', imagem_url: b.imagem_url || '', conteudo: b.conteudo || '', como_resgatar: b.como_resgatar || '' });
 
   async function salvar() { const { ok } = await chamar({ op: 'beneficio_editar', id: b.id, ...f }); if (ok) { setEdit(false); router.refresh(); } }
   async function toggle() { await chamar({ op: 'beneficio_editar', id: b.id, ativo: !b.ativo }); router.refresh(); }
@@ -71,7 +75,7 @@ function Linha({ b, primeira }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span className={`badge ${b.nivel_minimo}`} style={{ flexShrink: 0 }}>{labelCategoria(b.nivel_minimo)}+</span>
           <div style={{ flex: 1 }}>
-            <b>{b.titulo}</b> <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span> {!b.ativo && <span className="chip">inativo</span>}
+            <b>{b.titulo}</b> <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span> <span className="chip" style={{ background: '#eef2f6', color: '#3a5673' }}>{labelFormaEntrega(b.forma_entrega)}</span> {!b.ativo && <span className="chip">inativo</span>}
             {b.descricao && <span className="sub">{b.descricao}</span>}
           </div>
           <button type="button" className="btn-ghost" onClick={() => setEdit(true)}>Editar</button>
@@ -87,6 +91,9 @@ function Linha({ b, primeira }) {
             </select>
             <select value={f.periodicidade} onChange={e => setF({ ...f, periodicidade: e.target.value })} style={{ minWidth: 130 }}>
               {PERIODOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+            <select value={f.forma_entrega} onChange={e => setF({ ...f, forma_entrega: e.target.value })} style={{ minWidth: 180 }} title="Forma de entrega">
+              {FORMAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
             <button type="button" onClick={salvar}>Salvar</button>
             <button type="button" className="btn-ghost" onClick={() => setEdit(false)}>Cancelar</button>

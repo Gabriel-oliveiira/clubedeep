@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getAcesso } from '@/lib/acesso';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { rankNivel, labelCategoria, labelPeriodicidade } from '@/lib/format';
+import { rankNivel, labelCategoria, labelPeriodicidade, labelFormaEntrega } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +25,7 @@ export default async function BeneficioDetalhe({ params }) {
           <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
             <span className={`badge ${b.nivel_minimo}`}>{labelCategoria(b.nivel_minimo)}</span>
             <span className="chip" style={{ background: '#efe6db', color: 'var(--brand)' }}>{labelPeriodicidade(b.periodicidade)}</span>
+            <span className="chip" style={{ background: '#eef2f6', color: '#3a5673' }}>{labelFormaEntrega(b.forma_entrega)}</span>
           </div>
           <h1>{b.titulo}</h1>
           {b.descricao && <div className="sub">{b.descricao}</div>}

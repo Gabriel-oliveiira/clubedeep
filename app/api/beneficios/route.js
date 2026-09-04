@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 export const dynamic = 'force-dynamic';
 const NIVEIS = ['bronze', 'prata', 'ouro', 'platina'];
 const PERIODOS = ['unico', 'mensal', 'anual'];
+const FORMAS = ['automatico', 'resgate_cliente', 'equipe'];
 
 export async function POST(request) {
   const a = await getAcesso();
@@ -19,6 +20,7 @@ export async function POST(request) {
         titulo: b.titulo.trim(), descricao: b.descricao || null,
         nivel_minimo: NIVEIS.includes(b.nivel_minimo) ? b.nivel_minimo : 'bronze',
         periodicidade: PERIODOS.includes(b.periodicidade) ? b.periodicidade : 'unico',
+        forma_entrega: FORMAS.includes(b.forma_entrega) ? b.forma_entrega : 'equipe',
         imagem_url: b.imagem_url || null, conteudo: b.conteudo || null, como_resgatar: b.como_resgatar || null,
         ordem: Number(b.ordem) || 0, criado_por: a.email,
       });
@@ -32,6 +34,7 @@ export async function POST(request) {
       if (b.descricao != null) patch.descricao = b.descricao || null;
       if (b.nivel_minimo != null) patch.nivel_minimo = NIVEIS.includes(b.nivel_minimo) ? b.nivel_minimo : 'bronze';
       if (b.periodicidade != null) patch.periodicidade = PERIODOS.includes(b.periodicidade) ? b.periodicidade : 'unico';
+      if (b.forma_entrega != null) patch.forma_entrega = FORMAS.includes(b.forma_entrega) ? b.forma_entrega : 'equipe';
       if (b.imagem_url != null) patch.imagem_url = b.imagem_url || null;
       if (b.conteudo != null) patch.conteudo = b.conteudo || null;
       if (b.como_resgatar != null) patch.como_resgatar = b.como_resgatar || null;
