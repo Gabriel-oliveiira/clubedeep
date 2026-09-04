@@ -26,7 +26,7 @@ export default function VoucherMes({ nivel, voucherInicial, historico = [] }) {
       setLista(prev => [j.voucher, ...prev.filter(x => x.id !== j.voucher.id)]);
     } else {
       const t = { totvs: 'Nao foi possivel gerar agora. Tente novamente em instantes.', em_processamento: 'Gerando seu voucher, aguarde um instante...', bloqueado: 'Sua conta esta bloqueada.', sem_voucher: 'Seu nivel ainda nao tem voucher.' };
-      setMsg(t[j.erro] || 'Nao foi possivel resgatar o voucher.');
+      setMsg({ txt: t[j.erro] || 'Nao foi possivel resgatar o voucher.', detalhe: j.detalhe || null });
     }
   }
 
@@ -58,7 +58,12 @@ export default function VoucherMes({ nivel, voucherInicial, historico = [] }) {
           <button type="button" onClick={resgatar} disabled={loading}>{loading ? 'Gerando...' : `Resgatar voucher de ${brl(valor)}`}</button>
         </>
       )}
-      {msg && <div className="msg err" style={{ marginTop: 12 }}>{msg}</div>}
+      {msg && (
+        <div className="msg err" style={{ marginTop: 12 }}>
+          {msg.txt}
+          {msg.detalhe && <div style={{ marginTop: 6, fontSize: 11.5, opacity: .8, wordBreak: 'break-word' }}>Detalhe: {msg.detalhe}</div>}
+        </div>
+      )}
 
       {lista.length > 0 && (
         <div style={{ marginTop: 16, borderTop: '1px solid var(--line)', paddingTop: 12 }}>
