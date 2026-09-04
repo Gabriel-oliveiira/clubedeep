@@ -2,14 +2,15 @@
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase/client';
-import { IcDashboard, IcUsers, IcLogout, IcSettings, IcCursos, IcStar } from '@/components/Icons';
+import { IcDashboard, IcUsers, IcLogout, IcSettings, IcCursos, IcStar, IcClock } from '@/components/Icons';
 
 const NAV = [
-  { href: '/dashboard', label: 'Visao geral', Icon: IcDashboard },
+  { href: '/dashboard', label: 'Visão geral', Icon: IcDashboard },
   { href: '/clientes', label: 'Clientes', Icon: IcUsers },
   { href: '/cursos', label: 'Cursos', Icon: IcCursos },
-  { href: '/beneficios', label: 'Beneficios', Icon: IcStar },
-  { href: '/configuracoes', label: 'Configuracoes', Icon: IcSettings, apenas: 'admin' },
+  { href: '/beneficios', label: 'Benefícios', Icon: IcStar },
+  { href: '/gatilhos', label: 'Gatilhos e regras', Icon: IcClock, apenas: 'admin' },
+  { href: '/configuracoes', label: 'Configurações', Icon: IcSettings, apenas: 'admin' },
 ];
 
 export default function Sidebar({ email, papel }) {

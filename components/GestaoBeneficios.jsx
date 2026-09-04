@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { labelCategoria, labelPeriodicidade } from '@/lib/format';
 
 const NIVEIS = [['bronze', 'Bronze'], ['prata', 'Prata'], ['ouro', 'Ouro'], ['platina', 'Platina']];
-const PERIODOS = [['unico', 'Único'], ['mensal', 'Mensal'], ['anual', 'Anual']];
+const PERIODOS = [['automatico', 'Automático'], ['unico', 'Único'], ['mensal', 'Mensal'], ['anual', 'Anual']];
 
 async function chamar(body) {
   const r = await fetch('/api/beneficios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
