@@ -57,6 +57,9 @@ export async function POST() {
   } catch (e) {
     // desfaz a reserva pra permitir nova tentativa
     await supabaseAdmin.from('clube_vouchers').delete().eq('id', reserva.id);
-    return NextResponse.json({ erro: 'totvs', detalhe: String(e.message).slice(0, 300) }, { status: 502 });
+    const detalhe = String(e?.message || e).slice(0, 500);
+    // registra o erro no banco pra diagnostico (independente da tela)
+    await supabaseAdmin.from('clube_voucher_log').insert({ cd_cliente: a.cd_cliente, nivel, ok: false, erro: detalhe });
+    return NextResponse.json({ erro: 'totvs', detalhe: detalhe.slice(0, 300) }, { status: 502 });
   }
 }
