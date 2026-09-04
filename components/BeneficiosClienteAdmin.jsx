@@ -1,9 +1,11 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { labelPeriodicidade, labelFormaEntrega, labelCategoria, dataBR } from '@/lib/format';
 import { periodoAtual, labelPeriodoRef } from '@/lib/periodo';
 
 export default function BeneficiosClienteAdmin({ cdCliente, nivel, beneficios = [], resgatesIniciais = [] }) {
+  const router = useRouter();
   const [resgates, setResgates] = useState(resgatesIniciais);
   const [busy, setBusy] = useState(null);
 
@@ -17,7 +19,7 @@ export default function BeneficiosClienteAdmin({ cdCliente, nivel, beneficios = 
       body: JSON.stringify({ beneficio_id: b.id, cd_cliente: cdCliente }),
     });
     setBusy(null);
-    if (r.ok) setResgates(prev => [{ beneficio_id: b.id, periodo_ref: per, dt_resgate: new Date().toISOString() }, ...prev.filter(x => !(x.beneficio_id === b.id && x.periodo_ref === per))]);
+    if (r.ok) { setResgates(prev => [{ beneficio_id: b.id, periodo_ref: per, dt_resgate: new Date().toISOString() }, ...prev.filter(x => !(x.beneficio_id === b.id && x.periodo_ref === per))]); router.refresh(); }
     else alert('Nao foi possivel registrar.');
   }
   async function desfazer(b) {
@@ -29,7 +31,7 @@ export default function BeneficiosClienteAdmin({ cdCliente, nivel, beneficios = 
       body: JSON.stringify({ beneficio_id: b.id, cd_cliente: cdCliente, periodo_ref: per }),
     });
     setBusy(null);
-    if (r.ok) setResgates(prev => prev.filter(x => !(x.beneficio_id === b.id && x.periodo_ref === per)));
+    if (r.ok) { setResgates(prev => prev.filter(x => !(x.beneficio_id === b.id && x.periodo_ref === per))); router.refresh(); }
     else alert('Nao foi possivel desfazer.');
   }
 

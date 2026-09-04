@@ -17,7 +17,7 @@ export default async function Ficha({ params }) {
   let beneficios = [], resgates = [];
   if (rankNivel(nivel) >= 1) {
     const [{ data: bens }, { data: rgs }] = await Promise.all([
-      supabaseAdmin.from('clube_beneficios').select('id, titulo, periodicidade, nivel_minimo').eq('ativo', true).eq('nivel_minimo', nivel).order('ordem'),
+      supabaseAdmin.from('clube_beneficios').select('id, titulo, periodicidade, forma_entrega, nivel_minimo').eq('ativo', true).eq('nivel_minimo', nivel).order('ordem'),
       supabaseAdmin.from('clube_beneficio_resgates').select('beneficio_id, periodo_ref, dt_resgate').eq('cd_cliente', cd),
     ]);
     beneficios = bens || []; resgates = rgs || [];
