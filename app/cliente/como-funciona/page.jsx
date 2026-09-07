@@ -26,9 +26,9 @@ export default async function ComoFunciona() {
       </Bloco>
 
       <Bloco titulo="Pontos extras">
-        Além dos pontos das compras, você ganha bônus automáticos. Pedidos a partir de R$ 5.300,00 rendem 400 pontos
-        extras, e pedidos a partir de R$ 7.700,00 rendem 800 pontos extras. Comprando por 3 meses seguidos, você ganha
-        1.000 pontos. Chegando a 6 meses seguidos, ganha mais 3.000 pontos.
+        Além dos pontos das compras, você ganha bônus automáticos. Pedidos a partir de R$ 4.000,00 rendem 300 pontos
+        extras, a partir de R$ 5.600,00 rendem 600, e a partir de R$ 7.700,00 rendem 1.000 pontos extras. Comprando por
+        3 meses seguidos, você ganha 1.000 pontos. Chegando a 6 meses seguidos, ganha mais 3.000 pontos.
       </Bloco>
 
       <Bloco titulo="Validade dos pontos">
