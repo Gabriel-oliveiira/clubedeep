@@ -290,3 +290,11 @@ body{overflow-x:clip}
   .kpi-val{font-size:22px}
   .card{padding:14px}
 }
+
+/* Lista de clientes da vendedora */
+.tbl-vend td{vertical-align:middle;padding-top:12px;padding-bottom:12px}
+.tbl-vend td:first-child{min-width:230px}
+.tbl-vend tbody tr{transition:background .12s}
+.tbl-vend tbody tr:hover{background:#faf7f3}
+.tbl-vend a[aria-label="Abrir WhatsApp"]{transition:filter .12s}
+.tbl-vend a[aria-label="Abrir WhatsApp"]:hover{filter:brightness(.95)}
