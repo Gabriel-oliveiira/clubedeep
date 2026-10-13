@@ -56,7 +56,7 @@ export default async function VendedoraHome() {
 
       <div className="banner" style={{ background: '#f4ede5', border: '1px solid var(--line)', marginBottom: 16 }}>
         <div style={{ fontSize: 12.5 }}>
-          Aqui aparecem apenas os clientes <b>membros do Clube</b> com compra registrada no clube (nota a partir de R$ 2.500). Nao e o seu relatorio de vendas total.
+          Aqui aparecem apenas os clientes <b>membros do Clube</b> com compra registrada no clube (nota a partir de R$ 2.500). Não é o seu relatório de vendas total.
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export default async function VendedoraHome() {
             <thead>
               <tr>
                 <th>Cliente</th>
-                <th style={{ textAlign: 'center', width: 70 }}>Zap</th>
+                <th style={{ textAlign: 'center', width: 70 }}>
                 <th style={{ width: 120 }}>Nivel</th>
                 <th style={{ textAlign: 'right' }}>Saldo</th>
                 <th style={{ textAlign: 'center' }}>Vendas</th>
