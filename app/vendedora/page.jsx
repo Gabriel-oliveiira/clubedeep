@@ -66,7 +66,7 @@ export default async function VendedoraHome() {
             <thead>
               <tr>
                 <th>Cliente</th>
-                <th style={{ textAlign: 'center', width: 70 }}>
+                <th style={{ textAlign: 'center', width: 70 }}></th>
                 <th style={{ width: 120 }}>Nivel</th>
                 <th style={{ textAlign: 'right' }}>Saldo</th>
                 <th style={{ textAlign: 'center' }}>Vendas</th>
