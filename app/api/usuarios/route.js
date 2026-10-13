@@ -18,7 +18,7 @@ export async function GET() {
 
   const { data, error } = await supabaseAdmin
     .from('painel_acessos')
-    .select('email, papel, cd_cliente, nome, ativo, criado_em')
+    .select('email, papel, cd_cliente, cd_vendedor, nome, ativo, criado_em')
     .order('papel', { ascending: true })
     .order('email', { ascending: true });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -44,9 +44,11 @@ export async function POST(request) {
   const papel = String(body.papel || '');
   const senha = String(body.senha || '');
   const cd_cliente = body.cd_cliente ? String(body.cd_cliente) : null;
+  const cd_vendedor = (body.cd_vendedor !== undefined && body.cd_vendedor !== null && String(body.cd_vendedor).trim() !== '')
+    ? parseInt(String(body.cd_vendedor), 10) : null;
 
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return NextResponse.json({ error: 'E-mail invalido.' }, { status: 400 });
-  if (!['admin', 'suporte', 'comercial', 'loja'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
+  if (!['admin', 'suporte', 'comercial', 'loja', 'vendedora'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
 
   if (papel === 'loja') {
     if (!cd_cliente) return NextResponse.json({ error: 'Selecione a loja (cliente) para vincular.' }, { status: 400 });
@@ -54,7 +56,12 @@ export async function POST(request) {
     if (!cli) return NextResponse.json({ error: 'Cliente nao encontrado.' }, { status: 400 });
   } else {
     if (senha.length < 8) return NextResponse.json({ error: 'Senha deve ter pelo menos 8 caracteres.' }, { status: 400 });
-    // cria a conta de login (equipe entra com senha)
+    if (papel === 'vendedora') {
+      if (!Number.isInteger(cd_vendedor)) return NextResponse.json({ error: 'Informe o codigo do vendedor (cd_vendedor).' }, { status: 400 });
+      const { count } = await supabaseAdmin.from('clube_vendas').select('transacao', { count: 'exact', head: true }).eq('cd_vendedor', cd_vendedor);
+      if (!count) return NextResponse.json({ error: `Nenhuma venda encontrada para o vendedor ${cd_vendedor}. Confira o codigo.` }, { status: 400 });
+    }
+    // cria a conta de login (equipe/vendedora entra com senha)
     const { error: eAuth } = await supabaseAdmin.auth.admin.createUser({ email, password: senha, email_confirm: true });
     if (eAuth && !/already.*(registered|exists)/i.test(eAuth.message || '')) {
       return NextResponse.json({ error: `Erro ao criar login: ${eAuth.message}` }, { status: 500 });
@@ -63,7 +70,12 @@ export async function POST(request) {
 
   const { error: eAcc } = await supabaseAdmin
     .from('painel_acessos')
-    .upsert({ email, papel, cd_cliente: papel === 'loja' ? cd_cliente : null }, { onConflict: 'email' });
+    .upsert({
+      email,
+      papel,
+      cd_cliente: papel === 'loja' ? cd_cliente : null,
+      cd_vendedor: papel === 'vendedora' ? cd_vendedor : null,
+    }, { onConflict: 'email' });
   if (eAcc) return NextResponse.json({ error: eAcc.message }, { status: 500 });
 
   return NextResponse.json({ ok: true });
@@ -81,9 +93,13 @@ export async function PATCH(request) {
   const patch = {};
   if (body.papel != null) {
     const papel = String(body.papel);
-    if (!['admin', 'suporte', 'comercial', 'loja', 'cliente'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
+    if (!['admin', 'suporte', 'comercial', 'loja', 'cliente', 'vendedora'].includes(papel)) return NextResponse.json({ error: 'Papel invalido.' }, { status: 400 });
     if (email === a.email && papel !== 'admin') return NextResponse.json({ error: 'Voce nao pode rebaixar o proprio acesso.' }, { status: 400 });
     patch.papel = papel;
+  }
+  if (body.cd_vendedor !== undefined) {
+    patch.cd_vendedor = (body.cd_vendedor === null || String(body.cd_vendedor).trim() === '')
+      ? null : parseInt(String(body.cd_vendedor), 10);
   }
   if (body.nome != null) patch.nome = String(body.nome).trim() || null;
   if (body.ativo != null) {

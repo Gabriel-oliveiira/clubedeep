@@ -26,6 +26,7 @@ export default async function AreaCliente() {
   if (!a) redirect('/login');
   if (a.papel !== 'cliente') {
     if (a.papel === 'loja') redirect('/loja');
+    if (a.papel === 'vendedora') redirect('/vendedora');
     if (a.papel) redirect('/dashboard');
     redirect('/acesso-negado');
   }

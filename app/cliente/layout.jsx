@@ -11,8 +11,9 @@ export default async function ClienteLayout({ children }) {
   const a = await getAcesso();
   if (!a) redirect('/login');
   if (!a.papel) redirect('/acesso-negado');
-  if (a.papel === 'admin' || a.papel === 'comercial') redirect('/dashboard');
+  if (a.papel === 'admin' || a.papel === 'comercial' || a.papel === 'suporte') redirect('/dashboard');
   if (a.papel === 'loja') redirect('/loja');
+  if (a.papel === 'vendedora') redirect('/vendedora');
 
   // cliente inativo/bloqueado: loga, mas fica travado numa tela de bloqueio
   const { data: cli } = await supabaseAdmin.from('clube_clientes').select('situacao').eq('cd_cliente', a.cd_cliente).maybeSingle();

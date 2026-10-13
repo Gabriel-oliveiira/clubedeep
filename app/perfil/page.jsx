@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export default async function Perfil() {
   const a = await getAcesso();
   if (!a || !a.papel) redirect('/login');
-  const voltar = a.papel === 'cliente' ? '/cliente' : a.papel === 'loja' ? '/loja' : '/dashboard';
+  const voltar = a.papel === 'cliente' ? '/cliente' : a.papel === 'loja' ? '/loja' : a.papel === 'vendedora' ? '/vendedora' : '/dashboard';
 
   return (
     <div className="container" style={{ maxWidth: 900, margin: '0 auto', padding: '28px 22px' }}>

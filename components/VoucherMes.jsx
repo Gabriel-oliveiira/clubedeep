@@ -37,23 +37,23 @@ export default function VoucherMes({ nivel, voucherInicial, historico = [] }) {
 
   return (
     <div className="card" style={{ borderTop: '3px solid var(--brand-2,#c99a5b)' }}>
-      <h2>Voucher do mes — {brl(valor)}</h2>
+      <h2>Voucher do mês — {brl(valor)}</h2>
 
       {voucher?.voucher_code ? (
         <>
           <p className="muted" style={{ fontSize: 13.5, marginTop: 0 }}>
-            Seu voucher deste mes esta pronto. Apresente o codigo no fechamento do pedido — desconto de {brl(valor)} direto na nota, para compras a partir de R$ 2.500.
+            Seu voucher deste mês está pronto. Apresente o código no fechamento do pedido: {brl(valor)} de desconto direto na nota, para compras a partir de R$ 2.500,00. Ele soma com o seu desconto por prazo de pagamento.
           </p>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
             <span className="num" style={{ fontSize: 22, fontWeight: 700, letterSpacing: 1, background: '#f4ede5', padding: '10px 16px', borderRadius: 10 }}>{voucher.voucher_code}</span>
             <button type="button" className="btn-ghost" onClick={copiar}>{copiado ? 'Copiado!' : 'Copiar'}</button>
           </div>
-          {voucher.valido_ate && <small className="muted" style={{ display: 'block', marginTop: 8 }}>Valido ate {dataBR(voucher.valido_ate)}.</small>}
+          {voucher.valido_ate && <small className="muted" style={{ display: 'block', marginTop: 8 }}>Válido até {dataBR(voucher.valido_ate)}. Um por mês, em um único pedido, sem acúmulo.</small>}
         </>
       ) : (
         <>
           <p className="muted" style={{ fontSize: 13.5, marginTop: 0 }}>
-            Resgate seu voucher de {brl(valor)} de desconto direto na nota, valido este mes para compras a partir de R$ 2.500. Um por mes.
+            Todo mês você recebe um voucher de {brl(valor)} para abater direto na nota das suas compras no Grupo DEEP. Gerado no dia 1º, válido até o último dia do mês, para pedidos a partir de R$ 2.500,00. Um por mês, em um único pedido, sem acúmulo — e soma com o seu desconto por prazo de pagamento.
           </p>
           <button type="button" onClick={resgatar} disabled={loading}>{loading ? 'Gerando...' : `Resgatar voucher de ${brl(valor)}`}</button>
         </>

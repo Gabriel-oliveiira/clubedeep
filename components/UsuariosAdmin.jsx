@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-const PAPEL_LABEL = { admin: 'Admin', comercial: 'Comercial', suporte: 'Equipe (suporte)', loja: 'Loja', cliente: 'Cliente' };
-const PAPEIS_EDITAVEIS = [['admin', 'Admin'], ['comercial', 'Comercial'], ['suporte', 'Equipe (suporte)'], ['loja', 'Loja'], ['cliente', 'Cliente']];
+const PAPEL_LABEL = { admin: 'Admin', comercial: 'Comercial', suporte: 'Equipe (suporte)', loja: 'Loja', vendedora: 'Vendedora', cliente: 'Cliente' };
+const PAPEIS_EDITAVEIS = [['admin', 'Admin'], ['comercial', 'Comercial'], ['suporte', 'Equipe (suporte)'], ['loja', 'Loja'], ['vendedora', 'Vendedora'], ['cliente', 'Cliente']];
 
 export default function UsuariosAdmin({ meuEmail }) {
   const [usuarios, setUsuarios] = useState([]);
@@ -13,6 +13,7 @@ export default function UsuariosAdmin({ meuEmail }) {
   const [email, setEmail] = useState('');
   const [papel, setPapel] = useState('suporte');
   const [senha, setSenha] = useState('');
+  const [cdVendedor, setCdVendedor] = useState('');
   const [lojaSel, setLojaSel] = useState(null); // {cd_cliente, nome}
   const [buscaLoja, setBuscaLoja] = useState('');
   const [sugestoes, setSugestoes] = useState([]);
@@ -47,14 +48,17 @@ export default function UsuariosAdmin({ meuEmail }) {
     const body = { email, papel };
     if (papel === 'loja') body.cd_cliente = lojaSel?.cd_cliente;
     else body.senha = senha;
+    if (papel === 'vendedora') body.cd_vendedor = cdVendedor;
     const r = await fetch('/api/usuarios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const j = await r.json();
     setSalvando(false);
     if (!r.ok) { setMsg({ t: 'err', m: j.error || 'Erro ao criar usuario.' }); return; }
     setMsg({ t: 'ok', m: papel === 'loja'
       ? 'Acesso de loja criado. O cliente entra pela aba "Minha loja" com o e-mail cadastrado (link magico).'
+      : papel === 'vendedora'
+      ? 'Vendedora criada. Ja pode entrar com e-mail e senha e ve apenas os clientes e vendas do codigo vinculado.'
       : 'Usuario criado. Ja pode entrar com e-mail e senha.' });
-    setEmail(''); setSenha(''); setLojaSel(null); setBuscaLoja('');
+    setEmail(''); setSenha(''); setCdVendedor(''); setLojaSel(null); setBuscaLoja('');
     carregar();
   }
 
@@ -96,6 +100,7 @@ export default function UsuariosAdmin({ meuEmail }) {
                 <option value="comercial">Comercial</option>
                 <option value="admin">Admin</option>
                 <option value="loja">Loja</option>
+                <option value="vendedora">Vendedora</option>
               </select>
             </div>
 
@@ -103,6 +108,13 @@ export default function UsuariosAdmin({ meuEmail }) {
               <div className="field" style={{ flex: 1, minWidth: 180, marginBottom: 0 }}>
                 <label>Senha (min. 8)</label>
                 <input type="password" value={senha} onChange={e => setSenha(e.target.value)} required minLength={8} placeholder="********" />
+              </div>
+            )}
+
+            {papel === 'vendedora' && (
+              <div className="field" style={{ flex: 1, minWidth: 160, marginBottom: 0 }}>
+                <label>Codigo do vendedor</label>
+                <input type="number" value={cdVendedor} onChange={e => setCdVendedor(e.target.value)} required placeholder="ex: 30" />
               </div>
             )}
 
@@ -135,7 +147,7 @@ export default function UsuariosAdmin({ meuEmail }) {
               </div>
             )}
 
-            <button type="submit" disabled={salvando || (papel === 'loja' && !lojaSel)} style={{ padding: '10px 22px' }}>
+            <button type="submit" disabled={salvando || (papel === 'loja' && !lojaSel) || (papel === 'vendedora' && !String(cdVendedor).trim())} style={{ padding: '10px 22px' }}>
               {salvando ? 'Criando...' : 'Criar usuario'}
             </button>
           </div>
@@ -143,6 +155,11 @@ export default function UsuariosAdmin({ meuEmail }) {
         {papel === 'loja' && !msg && (
           <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>
             A loja entra sem senha: recebe um link magico no e-mail e ve apenas os pontos dela.
+          </p>
+        )}
+        {papel === 'vendedora' && !msg && (
+          <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>
+            A vendedora entra com e-mail e senha e ve apenas os clientes e vendas do codigo informado (sem totais).
           </p>
         )}
         {msg && <div className={`msg ${msg.t}`}>{msg.m}</div>}
@@ -168,7 +185,11 @@ export default function UsuariosAdmin({ meuEmail }) {
                         {PAPEIS_EDITAVEIS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
                     </td>
-                    <td className="muted">{u.cd_cliente ? `#${u.cd_cliente}` : '-'}</td>
+                    <td className="muted">
+                      {edit.papel === 'vendedora'
+                        ? <input type="number" value={edit.cd_vendedor ?? ''} onChange={e => setEdit({ ...edit, cd_vendedor: e.target.value })} placeholder="cod. vendedor" style={{ width: 110 }} />
+                        : (u.cd_cliente ? `#${u.cd_cliente}` : '-')}
+                    </td>
                     <td>
                       <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5 }}>
                         <input type="checkbox" checked={edit.ativo} onChange={e => setEdit({ ...edit, ativo: e.target.checked })} /> Ativo
@@ -184,10 +205,10 @@ export default function UsuariosAdmin({ meuEmail }) {
                     <td>{u.email}{u.email === meuEmail && <span className="chip ativa" style={{ marginLeft: 8 }}>voce</span>}</td>
                     <td className="muted">{u.nome || '-'}</td>
                     <td><span className="badge" style={{ background: u.papel === 'admin' ? 'var(--brand)' : u.papel === 'suporte' || u.papel === 'comercial' ? 'var(--brand-2)' : 'var(--semcat)' }}>{PAPEL_LABEL[u.papel] || u.papel}</span></td>
-                    <td className="muted">{u.cd_cliente ? `#${u.cd_cliente}${u.loja_nome ? ` — ${u.loja_nome}` : ''}` : '-'}</td>
+                    <td className="muted">{u.papel === 'vendedora' ? (u.cd_vendedor != null ? `Vendedor #${u.cd_vendedor}` : '-') : (u.cd_cliente ? `#${u.cd_cliente}${u.loja_nome ? ` — ${u.loja_nome}` : ''}` : '-')}</td>
                     <td>{u.ativo === false ? <span className="chip">inativo</span> : <span className="chip ativa">ativo</span>}</td>
                     <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <button type="button" className="btn-ghost" onClick={() => setEdit({ email: u.email, papel: u.papel, nome: u.nome || '', ativo: u.ativo !== false })}>Editar</button>
+                      <button type="button" className="btn-ghost" onClick={() => setEdit({ email: u.email, papel: u.papel, nome: u.nome || '', ativo: u.ativo !== false, cd_vendedor: u.cd_vendedor ?? '' })}>Editar</button>
                       {u.email !== meuEmail && (
                         <button type="button" className="btn-ghost" style={{ color: 'var(--bad)', borderColor: '#e8c9c9', marginLeft: 6 }} onClick={() => revogar(u.email)}>Revogar</button>
                       )}

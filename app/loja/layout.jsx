@@ -8,6 +8,7 @@ export default async function LojaLayout({ children }) {
   const a = await getAcesso();
   if (!a) redirect('/login');
   if (!a.papel) redirect('/acesso-negado');
+  if (a.papel === 'vendedora') redirect('/vendedora');
   if (a.papel !== 'loja') redirect('/dashboard');
   return (
     <>
