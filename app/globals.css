@@ -298,3 +298,14 @@ body{overflow-x:clip}
 .tbl-vend tbody tr:hover{background:#faf7f3}
 .tbl-vend a[aria-label="Abrir WhatsApp"]{transition:filter .12s}
 .tbl-vend a[aria-label="Abrir WhatsApp"]:hover{filter:brightness(.95)}
+
+/* Spinner inline (carregando ficha) */
+.spin{display:inline-block;width:12px;height:12px;margin-left:8px;vertical-align:middle;border:2px solid #d9cec2;border-top-color:var(--brand,#6b4e3d);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Skeleton loading */
+.sk{display:block;border-radius:8px;background:linear-gradient(90deg,#efe8df 25%,#f6f1ea 37%,#efe8df 63%);background-size:400% 100%;animation:sk 1.3s ease infinite}
+.sk-line{height:12px;width:100%}
+.sk-title{height:26px;width:260px;max-width:70vw}
+.sk-kpi{height:22px;width:80px}
+@keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
