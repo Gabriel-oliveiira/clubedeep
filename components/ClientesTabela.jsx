@@ -33,7 +33,7 @@ export default function ClientesTabela({ rows = [] }) {
                   <span className="sub">cad: {nomeLoja(c.empresa)}</span>
                 </td>
                 <td>
-                  <b>{c.cd_cliente} - {c.nome}</b> {c.em_carencia && <span className="chip carencia">carencia</span>}
+                  <b>{c.cd_cliente} - {c.nome}</b> {c.situacao && c.situacao !== 'Ativo' && <span className="chip bloq">bloqueado</span>} {c.em_carencia && <span className="chip carencia">carencia</span>}
                 </td>
                 <td style={{ whiteSpace: 'nowrap' }}>{labelTipoCliente(c.cat_cliente)}</td>
                 <td style={{ textAlign: 'center' }}>

@@ -33,22 +33,31 @@ export default async function Clientes({ searchParams }) {
   const to = from + PAGE_SIZE - 1;
   const o = ORDENS[ordem];
 
-  let query = supabaseAdmin.from('v_clube_painel_clientes').select('*', { count: 'exact' });
-  if (q) {
-    const termo = q.replace(/[,%()*]/g, ' ').trim();
-    query = query.or(`nome.ilike.%${termo}%,cpf_cnpj.ilike.%${termo}%,cd_cliente.ilike.%${termo}%`);
-  }
-  if (cat) query = query.eq('categoria', cat);
-  if (tipo) query = query.eq('cat_cliente', tipo);
-  if (mov === '1') query = query.not('loja_ultima', 'is', null);
-  if (lj) query = query.eq('loja_ultima', lj);
-  query = query.order(o.col, { ascending: o.asc, nullsFirst: false }).range(from, to);
+  const aplicarFiltros = (qb) => {
+    if (q) {
+      const termo = q.replace(/[,%()*]/g, ' ').trim();
+      qb = qb.or(`nome.ilike.%${termo}%,cpf_cnpj.ilike.%${termo}%,cd_cliente.ilike.%${termo}%`);
+    }
+    if (cat) qb = qb.eq('categoria', cat);
+    if (tipo) qb = qb.eq('cat_cliente', tipo);
+    if (mov === '1') qb = qb.not('loja_ultima', 'is', null);
+    if (lj) qb = qb.eq('loja_ultima', lj);
+    return qb;
+  };
 
-  const [{ data: rows, count }, { data: lojasOpts }] = await Promise.all([
+  const query = aplicarFiltros(supabaseAdmin.from('v_clube_painel_clientes').select('*', { count: 'exact' }))
+    .order(o.col, { ascending: o.asc, nullsFirst: false }).range(from, to);
+  const bloqQuery = aplicarFiltros(supabaseAdmin.from('v_clube_painel_clientes').select('cd_cliente', { count: 'exact', head: true }))
+    .neq('situacao', 'Ativo');
+
+  const [{ data: rows, count }, { count: bloqCount }, { data: lojasOpts }] = await Promise.all([
     query,
+    bloqQuery,
     supabaseAdmin.from('v_clube_lojas').select('loja'),
   ]);
   const total = count || 0;
+  const bloqueados = bloqCount || 0;
+  const ativos = Math.max(0, total - bloqueados);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
@@ -56,7 +65,7 @@ export default async function Clientes({ searchParams }) {
       <div className="page-head">
         <div>
           <h1>Clientes</h1>
-          <div className="sub">{pontos(total)} cliente(s) {cat ? `· ${labelCategoria(cat)}` : ''}{tipo ? ` · ${labelTipoCliente(tipo)}` : ''}{q ? ` · busca: "${q}"` : ''}</div>
+          <div className="sub">{pontos(ativos)} cliente(s){bloqueados > 0 ? <> · <span style={{ color: 'var(--bad)', fontWeight: 600 }}>{pontos(bloqueados)} bloqueado(s)</span></> : ''} {cat ? `· ${labelCategoria(cat)}` : ''}{tipo ? ` · ${labelTipoCliente(tipo)}` : ''}{q ? ` · busca: "${q}"` : ''}</div>
         </div>
       </div>
 

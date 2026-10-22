@@ -64,6 +64,7 @@ export default function ListaClientesVend({ rows = [] }) {
                   </td>
                   <td>
                     <span className={`badge ${c.categoria || 'sem_categoria'}`}>{labelCategoria(c.categoria || 'sem_categoria')}</span>
+                    {c.bloqueado && <span className="chip bloq" style={{ marginLeft: 6 }}>bloqueado</span>}
                     {c.em_carencia && <span className="chip" style={{ marginLeft: 6 }}>carencia</span>}
                   </td>
                   <td style={{ textAlign: 'right' }} className="num">{pontos(c.pontos_validos || 0)}</td>

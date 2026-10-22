@@ -101,6 +101,7 @@ td .sub{display:block;font-size:11.5px;color:var(--muted)}
 .chip.carencia{background:var(--bad-bg);color:var(--bad)}
 .chip.ativa{background:var(--ok-bg);color:var(--ok)}
 .chip.cancelada{background:var(--bad-bg);color:var(--bad)}
+.chip.bloq{background:var(--bad,#b23b3b);color:#fff}
 .pos{color:var(--ok);font-weight:600} .neg{color:var(--bad);font-weight:600}
 .muted{color:var(--muted)}
 .num{font-variant-numeric:tabular-nums}

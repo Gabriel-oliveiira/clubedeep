@@ -35,7 +35,7 @@ export default async function VendedoraHome() {
   if (cods.length) {
     // Busca nas tabelas base: inclui cliente sem nivel (e ate inativo) desde que tenha venda com a vendedora
     const [{ data: clientes }, { data: saldos }, { data: aexp }] = await Promise.all([
-      supabaseAdmin.from('clube_clientes').select('cd_cliente, nome, cidade, uf, telefone').in('cd_cliente', cods),
+      supabaseAdmin.from('clube_clientes').select('cd_cliente, nome, cidade, uf, telefone, situacao').in('cd_cliente', cods),
       supabaseAdmin.from('clube_saldos').select('cd_cliente, pontos_validos, categoria_efetiva, em_carencia').in('cd_cliente', cods),
       supabaseAdmin.from('v_clube_pontos_a_expirar').select('cd_cliente, expira_30d').in('cd_cliente', cods),
     ]);
@@ -54,6 +54,7 @@ export default async function VendedoraHome() {
         cidade: c.cidade,
         uf: c.uf,
         telefone: c.telefone,
+        bloqueado: !!(c.situacao && c.situacao !== 'Ativo'),
         pontos_validos: Number(s.pontos_validos || 0),
         categoria: s.categoria_efetiva || 'sem_categoria',
         em_carencia: !!s.em_carencia,
@@ -66,13 +67,17 @@ export default async function VendedoraHome() {
   }
 
   const totalExpira = rows.reduce((s, r) => s + (r.expira_30d > 0 ? 1 : 0), 0);
+  const nBloq = rows.reduce((s, r) => s + (r.bloqueado ? 1 : 0), 0);
+  const nAtivos = rows.length - nBloq;
 
   return (
     <>
       <div className="page-head">
         <div>
           <h1>Meus clientes</h1>
-          <div className="sub">{rows.length} cliente(s) no Clube DEEP · vendedor #{a.cd_vendedor}</div>
+          <div className="sub">
+            {nAtivos} cliente(s) no Clube DEEP{nBloq > 0 ? <> · <span style={{ color: 'var(--bad)', fontWeight: 600 }}>{nBloq} bloqueado(s)</span></> : ''} · vendedor #{a.cd_vendedor}
+          </div>
         </div>
       </div>
 
