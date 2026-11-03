@@ -40,8 +40,10 @@ export default async function BeneficiosCliente() {
   const historico = [...rg].sort((x, y) => new Date(y.dt_resgate) - new Date(x.dt_resgate));
   const ordenar = (x, y) => (rankNivel(x.nivel_minimo) - rankNivel(y.nivel_minimo)) || (x.ordem - y.ordem);
   // cada nivel tem sua lista completa: mostra os do nivel atual do cliente
-  const liberados = (todos || []).filter(b => rankNivel(b.nivel_minimo) === rankNivel(nivel)).sort(ordenar);
-  const bloqueados = (todos || []).filter(b => rankNivel(b.nivel_minimo) > rankNivel(nivel)).sort(ordenar);
+  // o voucher ja aparece na caixa "Voucher do mes" acima; nao duplicar na grade
+  const semVoucher = (todos || []).filter(b => b.tipo !== 'voucher');
+  const liberados = semVoucher.filter(b => rankNivel(b.nivel_minimo) === rankNivel(nivel)).sort(ordenar);
+  const bloqueados = semVoucher.filter(b => rankNivel(b.nivel_minimo) > rankNivel(nivel)).sort(ordenar);
 
   return (
     <>
