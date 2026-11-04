@@ -70,17 +70,16 @@ export default async function CursosCliente() {
             const capa = c.capa_url || thumbYoutube(primeiraAula[c.id], 'hqdefault');
             if (c.em_breve) {
               return (
-                <div key={c.id} className="card" style={{ position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }}>
-                    {capa
-                      ? <img src={capa} alt="" style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />
-                      : <div style={{ width: '100%', height: 130, borderRadius: 10, marginBottom: 10, background: '#efe9e1' }} />}
-                    <h2 style={{ marginTop: 0 }}>{c.titulo}</h2>
-                    {c.descricao && <p className="muted" style={{ fontSize: 13.5 }}>{c.descricao}</p>}
+                <div key={c.id} className="card curso-breve">
+                  <div className="cb-capa">
+                    {capa && <img src={capa} alt="" className="cb-capa-img" />}
+                    <span className="cb-ico" aria-hidden="true">⏳</span>
+                    <span className="cb-lvl">{labelCategoria(c.nivel_minimo)}</span>
+                    <span className="cb-pill">⏳ Disponível em breve</span>
                   </div>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,.35)' }}>
-                    <span className="chip" style={{ background: 'var(--brand,#6b4e3d)', color: '#fff', fontSize: 13, padding: '8px 16px', boxShadow: 'var(--shadow-lg)' }}>⏳ Disponível em breve</span>
-                  </div>
+                  <h2 style={{ marginTop: 0 }}>{c.titulo}</h2>
+                  {c.descricao && <p className="muted" style={{ fontSize: 13.5, marginBottom: 12 }}>{c.descricao}</p>}
+                  <div className="cb-foot"><span className="cb-dot" /> Conteúdo em produção</div>
                 </div>
               );
             }
