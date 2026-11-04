@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { labelCategoria, dataBR } from '@/lib/format';
 import NovoCurso from '@/components/NovoCurso';
+import CursosTabelaAdmin from '@/components/CursosTabelaAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,26 +18,7 @@ export default async function GestaoCursosPage() {
 
       <NovoCurso />
 
-      <div className="card flush" style={{ marginTop: 16 }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table>
-            <thead><tr><th>Curso</th><th>Nivel minimo</th><th style={{ textAlign: 'center' }}>Aulas</th><th>Status</th><th>Criado</th></tr></thead>
-            <tbody>
-              {(cursos || []).map(c => (
-                <tr key={c.id} style={{ cursor: 'pointer' }}>
-                  <td><a href={`/cursos/${c.id}`} style={{ fontWeight: 600, color: 'inherit', textDecoration: 'none' }}>{c.titulo}</a>
-                    {c.descricao && <span className="sub">{c.descricao}</span>}</td>
-                  <td>{labelCategoria(c.nivel_minimo)}+</td>
-                  <td style={{ textAlign: 'center' }}>{cont[c.id] || 0}</td>
-                  <td>{c.ativo ? <span className="chip" style={{ background: '#e6f4ea', color: '#1da851' }}>ativo</span> : <span className="chip">inativo</span>}</td>
-                  <td className="muted">{dataBR(c.criado_em)}</td>
-                </tr>
-              ))}
-              {(!cursos || cursos.length === 0) && <tr><td colSpan={5}><div className="empty">Nenhum curso ainda. Crie o primeiro acima.</div></td></tr>}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <CursosTabelaAdmin cursos={cursos || []} cont={cont} />
     </>
   );
 }
