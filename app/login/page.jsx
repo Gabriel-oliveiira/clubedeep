@@ -39,7 +39,6 @@ export default function Login() {
       <div className="login-box">
         <div className="login-logo">
           <img src="/deep-logo.png" alt="DEEP" />
-          <small>Clube DEEP</small>
         </div>
         <div className="login-card">
           <div className="login-head">
