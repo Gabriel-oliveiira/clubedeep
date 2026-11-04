@@ -13,7 +13,7 @@ async function chamar(body) {
 
 export default function GestaoCurso({ curso, aulas = [] }) {
   const router = useRouter();
-  const [c, setC] = useState({ titulo: curso.titulo, descricao: curso.descricao || '', nivel_minimo: curso.nivel_minimo, ativo: curso.ativo, capa_url: curso.capa_url || '' });
+  const [c, setC] = useState({ titulo: curso.titulo, descricao: curso.descricao || '', nivel_minimo: curso.nivel_minimo, ativo: curso.ativo, capa_url: curso.capa_url || '', em_breve: !!curso.em_breve });
   const [msg, setMsg] = useState(null);
   const [nova, setNova] = useState({ titulo: '', descricao: '', youtube: '' });
 
@@ -47,6 +47,9 @@ export default function GestaoCurso({ curso, aulas = [] }) {
           </select>
           <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
             <input type="checkbox" checked={c.ativo} onChange={e => setC({ ...c, ativo: e.target.checked })} /> Ativo
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }} title="Mostra o curso borrado com o selo 'Disponivel em breve' e nao deixa abrir">
+            <input type="checkbox" checked={c.em_breve} onChange={e => setC({ ...c, em_breve: e.target.checked })} /> Em breve
           </label>
         </div>
         <input value={c.descricao} onChange={e => setC({ ...c, descricao: e.target.value })} placeholder="Descricao" style={{ width: '100%', marginTop: 10 }} />

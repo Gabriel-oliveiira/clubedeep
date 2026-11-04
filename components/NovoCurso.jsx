@@ -7,6 +7,7 @@ export default function NovoCurso() {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [nivel, setNivel] = useState('bronze');
+  const [emBreve, setEmBreve] = useState(false);
   const [msg, setMsg] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -15,12 +16,12 @@ export default function NovoCurso() {
     setLoading(true); setMsg(null);
     const r = await fetch('/api/cursos', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ op: 'curso_criar', titulo, descricao, nivel_minimo: nivel }),
+      body: JSON.stringify({ op: 'curso_criar', titulo, descricao, nivel_minimo: nivel, em_breve: emBreve }),
     });
     const j = await r.json().catch(() => ({}));
     setLoading(false);
     if (!r.ok) { setMsg('Nao foi possivel criar. ' + (j.detalhe || '')); return; }
-    setTitulo(''); setDescricao(''); setNivel('bronze');
+    setTitulo(''); setDescricao(''); setNivel('bronze'); setEmBreve(false);
     router.push(`/cursos/${j.id}`);
   }
 
@@ -35,6 +36,9 @@ export default function NovoCurso() {
           <option value="ouro">A partir de Ouro</option>
           <option value="platina">A partir de Platina</option>
         </select>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }} title="Mostra o curso borrado com o selo 'Disponivel em breve' e nao deixa abrir">
+          <input type="checkbox" checked={emBreve} onChange={e => setEmBreve(e.target.checked)} /> Em breve
+        </label>
         <button type="submit" disabled={loading}>{loading ? 'Criando...' : 'Criar curso'}</button>
       </div>
       <input placeholder="Descricao (opcional)" value={descricao} onChange={e => setDescricao(e.target.value)} style={{ width: '100%', marginTop: 10 }} />
