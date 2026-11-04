@@ -68,9 +68,9 @@ export default function Cadastro() {
                  className="btn" style={{ display: 'inline-block', background: '#1da851', color: '#fff', padding: '12px 20px', borderRadius: 10, textDecoration: 'none', marginTop: 6 }}>
                 Falar no WhatsApp
               </a>
-              <div style={{ marginTop: 16 }}>
-                <button type="button" className="link" onClick={() => setSemAcesso(false)} style={{ background: 'none', border: 'none', color: 'var(--brand)', cursor: 'pointer' }}>
-                  Tentar outro documento
+              <div style={{ marginTop: 14 }}>
+                <button type="button" className="btn-ghost" onClick={() => router.push('/login')} style={{ width: '100%' }}>
+                  Voltar
                 </button>
               </div>
             </div>
