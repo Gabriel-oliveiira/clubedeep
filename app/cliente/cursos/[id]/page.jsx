@@ -16,7 +16,7 @@ export default async function CursoDetalhe({ params }) {
   if (rankNivel(nivel) < 1) redirect('/cliente/cursos');
 
   const { data: curso } = await supabaseAdmin.from('clube_cursos').select('*').eq('id', params.id).eq('ativo', true).maybeSingle();
-  if (!curso || rankNivel(curso.nivel_minimo) > rankNivel(nivel)) redirect('/cliente/cursos');
+  if (!curso || curso.em_breve || rankNivel(curso.nivel_minimo) > rankNivel(nivel)) redirect('/cliente/cursos');
 
   const [{ data: aulas }, { data: prog }] = await Promise.all([
     supabaseAdmin.from('clube_aulas').select('id, titulo, descricao, youtube_id, ordem').eq('curso_id', curso.id).eq('ativo', true).order('ordem').order('criado_em'),

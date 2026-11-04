@@ -22,6 +22,7 @@ export async function POST(request) {
         titulo: b.titulo.trim(), descricao: b.descricao || null,
         nivel_minimo: NIVEIS.includes(b.nivel_minimo) ? b.nivel_minimo : 'bronze',
         capa_url: b.capa_url || null,
+        em_breve: !!b.em_breve,
         ordem: Number(b.ordem) || 0, criado_por: a.email,
       }).select('id').single();
       if (error) throw error;
@@ -35,6 +36,7 @@ export async function POST(request) {
       if (b.descricao != null) patch.descricao = b.descricao || null;
       if (b.nivel_minimo != null) patch.nivel_minimo = NIVEIS.includes(b.nivel_minimo) ? b.nivel_minimo : 'bronze';
       if (b.capa_url != null) patch.capa_url = b.capa_url || null;
+      if (b.em_breve != null) patch.em_breve = !!b.em_breve;
       if (b.ordem != null) patch.ordem = Number(b.ordem) || 0;
       if (b.ativo != null) patch.ativo = !!b.ativo;
       const { error } = await db.from('clube_cursos').update(patch).eq('id', b.id);

@@ -310,3 +310,11 @@ body{overflow-x:clip}
 .sk-title{height:26px;width:260px;max-width:70vw}
 .sk-kpi{height:22px;width:80px}
 @keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
+
+/* Login - cabecalho e rodape do card (sem abas) */
+.login-head{margin-bottom:20px}
+.login-head h1{margin:0 0 4px;font-size:21px;color:var(--brand,#6b4e3d)}
+.login-head p{margin:0;font-size:13px;color:var(--muted)}
+.login-foot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.login-foot a{color:var(--brand);font-weight:600;text-decoration:none}
+.login-foot a:hover{text-decoration:underline}
